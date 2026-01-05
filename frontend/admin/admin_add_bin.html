@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Bin - Admin</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind Configuration
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    // Tracker primary blue
+                    primary: '#002D74', 
+                    secondary: '#121518',
+                },
+                fontFamily: {
+                    sans: ['Poppins', 'sans-serif'],
+                },
+            }
+        }
+    }
+  </script>
+  <style>
+    /* Google Font Import from header_footer.html */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+    /* Custom Styles from header_footer.html */
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: #666666;
+        background: #ffffff; 
+    }
+
+    /* Sticky Navbar Styles */
+    .nav-bar {
+        position: relative;
+        top: 0;
+        width: 100%;
+        z-index: 50;
+    }
+
+    .nav-sticky {
+        position: fixed;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        animation: slideDown 0.3s ease-in-out;
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-100%); }
+        to { transform: translateY(0); }
+    }
+    
+    /* Main content wrapper to push content below the fixed header */
+    .main-content {
+        /* Adjusted padding to show content below header and above footer */
+        padding-top: 100px; 
+        padding-bottom: 80px; 
+        min-height: 100vh;
+        background: #f9fafb; /* Equivalent to bg-gray-50 */
+        /* Added flex centering to mimic original admin_add_bin.html layout */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+  </style>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navBar = document.getElementById('nav-bar');
+      const headerHeight = navBar.offsetHeight;
+
+      function handleScroll() {
+        if (window.scrollY > headerHeight) {
+          navBar.classList.add('nav-sticky', 'bg-white', 'w-full');
+        } else {
+          navBar.classList.remove('nav-sticky', 'bg-white', 'w-full');
+        }
+      }
+
+      window.addEventListener('scroll', handleScroll);
+    });
+  </script>
+</head>
+
+<body class="font-sans bg-white">
+  <div class="wrapper relative w-full bg-white shadow-xl overflow-hidden">
+        
+    <header class="bg-secondary text-white hidden md:block">
+      <div class="flex justify-between items-center px-6 py-2 max-w-7xl mx-auto">
+        <div class="flex space-x-6 text-sm">
+          <div class="flex items-center space-x-1">
+            <svg class="w-4 h-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l.06.07 3.39 3.39a8.91 8.91 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"/></svg>
+            <span>+941 125 7890</span>
+          </div>
+          <div class="flex items-center space-x-1">
+            <svg class="w-4 h-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+            <span>info@wastetracker.com</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav-bar" class="nav-bar bg-white border-b border-gray-100 transition-all duration-300">
+      <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+        <a href="homepage.html#home" class="flex items-center gap-2 text-3xl font-extrabold text-secondary">
+          <div class="text-4xl text-primary leading-none">♻️</div>
+          <span class="m-0">
+            <span class="text-primary">S</span>MART <span class="text-primary">W</span>ASTE <span class="text-primary">T</span>RACKER
+          </span>
+        </a>
+        <div class="hidden lg:flex space-x-8 items-center text-lg font-medium text-gray-700">
+          <a href="homepage.html#home" class="hover:text-primary transition duration-200">Home</a>
+          <a href="homepage.html#about" class="hover:text-primary transition duration-200">About</a>
+          <a href="homepage.html#service" class="hover:text-primary transition duration-200">Service</a>
+          <a href="homepage.html#project" class="hover:text-primary transition duration-200">Development</a>
+          <a href="homepage.html#team" class="hover:text-primary transition duration-200">Team</a>
+          <a href="Login.html" class="px-6 py-2 rounded-lg bg-primary text-white hover:bg-opacity-80 transition duration-300 shadow-md">
+            Login
+          </a>
+        </div>
+        <button class="lg:hidden text-2xl text-secondary menu-toggle">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </nav>
+    
+    <div class="main-content">
+      <div class="bg-white flex flex-col md:flex-row rounded-2xl shadow-xl max-w-3xl w-full overflow-hidden">
+        
+        <div class="md:w-1/2 w-full px-10 py-10">
+          <h3 class="font-bold text-3xl text-[#002D74] mb-2">Add New Waste Bin</h3>
+          <p class="text-sm text-[#002D74] mb-6">Register a new bin location in the system</p>
+
+          <div id="alertBox" class="hidden mb-4 p-4 rounded-xl w-full"></div>
+
+          <form id="addBinForm" class="flex flex-col space-y-4">
+            
+            <div>
+               <label for="location" class="block text-sm font-medium text-[#002D74] mb-1">
+                Location
+               </label>
+
+               <select 
+               name="location" 
+               id="location" 
+               required
+               class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002D74] transition duration-150">
+               <option>Loading...</option>
+               </select>
+            </div>
+
+            <div>
+              <label for="variety" class="block text-sm font-medium text-[#002D74] mb-1">Waste Category</label>
+              <select 
+                name="variety" 
+                id="variety" 
+                required
+                class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002D74] transition duration-150">
+                <option value="" disabled selected>Select Category</option>
+                <option value="Organic">Organic</option>
+                <option value="Plastic">Plastic</option>
+                <option value="Polythene">Polythene</option>
+                <option value="Paper">Paper</option>
+                <option value="E-waste">E-waste</option>
+                <option value="Metal">Metal</option>
+                <option value="Glass">Glass</option>
+              </select>
+            </div>
+            
+            <button type="submit" id="submitBtn"
+                    class="w-full mt-6 bg-[#002D74] text-white font-semibold rounded-xl px-4 py-3 hover:opacity-90 duration-300 shadow-lg">
+              Submit
+            </button>
+            
+            <div class="mt-4 text-center">
+              <a href="admin_dashboard.html" class="text-[#002D74] text-sm hover:underline">← Back to Dashboard</a>
+            </div>
+          </form>
+        </div>
+
+        <div class="hidden md:block md:w-1/2 relative overflow-hidden">
+          <img src="add_bin.jpg" alt="Illustration of a new bin being added" class="w-full h-full object-cover">
+        </div>
+      </div>
+      </div>
+    
+    <footer class="bg-gray-900 pt-16 pb-6">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8 text-gray-400">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-700 pb-10 mb-8">
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Get In Touch</h4>
+            <p class="mb-2 flex items-center">
+              <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.79 6.2a.85.85 0 0 1 1.21 1.22L12 20.32l-8-8.09a.85.85 0 0 1 1.22-1.21L12 17.58l7.21-7.2a.85.85 0 0 1 1.21 1.22zM12 2a4 4 0 0 1 4 4c0 1.26-1.5 3.2-4 6-2.5-2.8-4-4.74-4-6a4 4 0 0 1 4-4z"/></svg>
+              123 York St, Orion City, Colombo 05
+            </p>
+            <p class="mb-2 flex items-center">
+              <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l.06.07 3.39 3.39a8.91 8.91 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"/></svg>
+              +941 125 7890
+            </p>
+            <p class="mb-2 flex items-center">
+              <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+              info@wastetracker.com
+            </p>
+          </div>
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Quick Links</h4>
+            <div class="space-y-2">
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#about">About Us</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#contact">Contact Us</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Our Services</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#team">Meet The Team</a>
+              <a class="block hover:text-primary transition duration-300" href="Login.html">Client Login</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Popular Services</h4>
+            <div class="space-y-2">
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Bin Monitoring</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Route Optimization</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Data Analytics</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Maintenance</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Financial Tracking</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Newsletter</h4>
+            <p>Stay updated with our latest smart waste solutions and industry news.</p>
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between items-center text-sm">
+          <div class="text-center md:text-left mb-4 md:mb-0">
+            &copy; 2025 <a class="text-white hover:text-primary" href="#">Smart Waste Tracker</a>. All Rights Reserved.
+          </div>
+          <div class="flex space-x-3">
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.89l-1.92-1.92A4.89 4.89 0 0 0 17 4.5h-1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a4.89 4.89 0 0 0 3.62-1.47l1.92-1.92a2.38 2.38 0 0 0 0-3.35zM7.5 7h4v10h-4a2.5 2.5 0 0 1 0-5h2.5"/></svg>
+            </a>
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1 1.1 2 2.7 2 4.6 0 7-5.5 12-12 12C5.5 24 0 18.5 0 12c0-2.3.9-4.5 2.5-6.2 1.6-1.7 3.8-2.6 6.2-2.8 1.4.3 2.7 1 3.7 2.1 1.1-.2 2.1-.6 3-1.2-.3 1-.9 1.9-1.6 2.5 1.1-.1 2.1-.4 3-.8-.7 1-1.3 1.8-2.1 2.4z"/></svg>
+            </a>
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div> 
+  <script>
+  const locationSelect = document.getElementById("location");
+
+  async function loadLocations() {
+    const locationSelect = document.getElementById("location");
+
+    try {
+        const res = await fetch(
+            "http://localhost/Smart-Waste-Management-Tracker/Smart-Waste-Management-Tracker/api_backend/get_locations.php"
+        );
+
+        const data = await res.json();
+
+        locationSelect.innerHTML = ""; // clear loading text
+
+        if (data.success && data.locations.length > 0) {
+            locationSelect.innerHTML = `<option value="">Select a location</option>`;
+
+            data.locations.forEach(loc => {
+                const opt = document.createElement("option");
+                opt.value = loc.Location_Name;
+                opt.textContent = loc.Location_Name;
+                locationSelect.appendChild(opt);
+            });
+
+        } else {
+            locationSelect.innerHTML = `<option value="">No locations found</option>`;
+        }
+    } 
+    catch (error) {
+        locationSelect.innerHTML = `<option value="">Failed to load locations</option>`;
+        console.error("Error loading locations:", error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadLocations);
+
+
+    const form = document.getElementById('addBinForm');
+    const alertBox = document.getElementById('alertBox');
+    const submitBtn = document.getElementById('submitBtn');
+    const apiUrl = 'http://localhost/Smart-Waste-Management-Tracker/Smart-Waste-Management-Tracker/api_backend/add_bin.php'; 
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Adding Bin...';
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          body: formData,
+          credentials: 'include' 
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showAlert('success', result.message);
+          form.reset();
+          setTimeout(() => {
+            window.location.href = 'admin_dashboard.html';
+          }, 2000);
+        } else {
+          showAlert('error', result.message);
+        }
+      } catch (error) {
+        showAlert('error', 'Network error. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit';
+      }
+    });
+
+    function showAlert(type, message) {
+      alertBox.className = `mb-4 p-4 rounded-xl ${type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`;
+      alertBox.textContent = message;
+      alertBox.classList.remove('hidden');
+      
+      setTimeout(() => {
+        alertBox.classList.add('hidden');
+      }, 5000);
+    }
+  </script>
+
+</body>
+</html>

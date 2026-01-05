@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Bin Status</title>
+  <script>
+    // Tailwind Configuration
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    // Tracker primary blue
+                    primary: '#002D74', 
+                    secondary: '#121518',
+                },
+                fontFamily: {
+                    sans: ['Poppins', 'sans-serif'],
+                },
+            }
+        }
+    }
+  </script>
+  <style>
+    /* Google Font Import */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+    /* Custom Styles */
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: #666666;
+        background: #ffffff; 
+    }
+
+    /* Sticky Navbar Styles */
+    .nav-bar {
+        position: relative;
+        top: 0;
+        width: 100%;
+        z-index: 50;
+    }
+
+    .nav-sticky {
+        position: fixed;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        animation: slideDown 0.3s ease-in-out;
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-100%); }
+        to { transform: translateY(0); }
+    }
+    
+    /* Main content wrapper to push content below the fixed header */
+    .main-content {
+        /* Adjusted padding to show content below header and above footer */
+        padding-top: 100px; 
+        padding-bottom: 80px; 
+        min-height: 100vh;
+        background: #f3f4f6;
+    }
+    
+    /* --- START NEON SEARCH BAR STYLES --- */
+
+    /* Reset for the component, ensuring it works inside the white card */
+    .search-container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .input-wrapper {
+        position: relative;
+        width: 314px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        --spin-duration: 4s;
+    }
+
+    .search-field {
+        width: 301px;
+        height: 56px;
+        /* Adjusted background for better contrast against the white card */
+        background: #002D74; 
+        border: none;
+        border-radius: 10px;
+        padding: 0 60px 0 20px;
+        font-size: 18px;
+        color: #ffffff;
+        position: relative;
+        z-index: 5;
+        transition: all 0.3s ease;
+    }
+
+    .search-field::placeholder {
+        color: #ffffff;
+    }
+
+    .search-field:focus {
+        outline: none;
+        box-shadow: 0 0 20px rgba(207, 48, 170, 0.2);
+    }
+
+    .effect-layer {
+        position: absolute;
+        border-radius: 12px;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .outer-glow {
+        width: 354px;
+        height: 130px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        filter: blur(32px);
+        opacity: 0.6;
+        overflow: hidden;
+    }
+
+    .outer-glow::after {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        background: conic-gradient(
+            from 60deg at 50% 50%,
+            transparent 0deg,
+            #16088f 15deg,
+            transparent 145deg,
+            transparent 180deg,
+            #252525 215deg,
+            transparent 325deg
+        );
+        animation: spin-effect var(--spin-duration, 4s) linear infinite;
+    }
+
+    .dark-layer {
+        width: 312px;
+        height: 65px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        filter: blur(2.5px);
+        overflow: hidden;
+    }
+
+    .dark-layer::after {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        background: conic-gradient(
+            from 82deg at 50% 50%,
+            transparent 0deg,
+            #2018a0 25deg,
+            transparent 75deg,
+            transparent 180deg,
+            #000000 205deg,
+            transparent 255deg
+        );
+        animation: spin-effect var(--spin-duration, 4s) linear infinite;
+    }
+
+    .bright-layer {
+        width: 307px;
+        height: 63px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        filter: blur(1.8px);
+        overflow: hidden;
+    }
+
+    .bright-layer::after {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        background: conic-gradient(
+            from 83deg at 50% 50%,
+            transparent 0deg,
+            #140261 20deg,
+            transparent 60deg,
+            transparent 180deg,
+            #d4c6d2 200deg,
+            transparent 240deg
+        );
+        filter: brightness(1.6);
+        animation: spin-effect var(--spin-duration, 4s) linear infinite;
+    }
+
+    .primary-border {
+        width: 303px;
+        height: 59px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        filter: blur(0.4px);
+        overflow: hidden;
+    }
+
+    .primary-border::after {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        background: conic-gradient(
+            from 70deg at 50% 50%,
+            transparent 0deg,
+            #46464b 20deg,
+            transparent 80deg,
+            transparent 180deg,
+            #002D74 210deg,
+            transparent 270deg
+        );
+        filter: brightness(1.5);
+        animation: spin-effect var(--spin-duration, 4s) 0.15s linear infinite;
+    }
+
+    .pink-hint {
+        position: absolute;
+        width: 30px;
+        height: 20px;
+        background: radial-gradient(circle, #948791 0%, transparent 70%);
+        top: 18px;
+        left: 20px;
+        filter: blur(18px);
+        opacity: 0.75;
+        z-index: 4;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+
+    .input-wrapper:hover .pink-hint {
+        opacity: 0;
+    }
+
+    .gradient-mask {
+        position: absolute;
+        width: 95px;
+        height: 18px;
+        /* Adjusted background for contrast */
+        background: linear-gradient(to right, transparent 0%, #053463 100%); 
+        top: 20px;
+        left: 20px;
+        z-index: 4;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .search-field:focus ~ .gradient-mask {
+        opacity: 0;
+    }
+
+    .search-button {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 38px;
+        height: 40px;
+        background-color: transparent;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 6;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .search-button:hover {
+        transform: translateY(-50%) scale(1.05);
+    }
+
+    .search-button:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+
+    .search-button svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .button-border-effect {
+        position: absolute;
+        right: 7px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 42px;
+        border-radius: 10px;
+        overflow: hidden;
+        z-index: 5;
+    }
+
+    .button-border-effect::before {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        background: conic-gradient(
+            from 90deg at 50% 50%,
+            transparent 0deg,
+        #002D74 85deg,
+            transparent 95deg,
+            transparent 180deg,
+            #3c394d 265deg,
+            transparent 275deg
+        );
+        filter: brightness(1.4);
+        animation: spin-effect var(--spin-duration, 4s) linear infinite;
+    }
+
+    @keyframes spin-effect {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @media (max-width: 400px) {
+        .input-wrapper {
+            width: 90vw;
+        }
+        
+        .search-field {
+            width: calc(90vw - 13px);
+        }
+    }
+    /* --- END NEON SEARCH BAR STYLES --- */
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navBar = document.getElementById('nav-bar');
+      const headerHeight = navBar.offsetHeight;
+
+      function handleScroll() {
+        if (window.scrollY > headerHeight) {
+          navBar.classList.add('nav-sticky', 'bg-white', 'w-full');
+        } else {
+          navBar.classList.remove('nav-sticky', 'bg-white', 'w-full');
+        }
+      }
+
+      window.addEventListener('scroll', handleScroll);
+    });
+  </script>
+</head>
+<body class="font-sans bg-white"> 
+  <div class="wrapper relative w-full bg-white shadow-xl overflow-hidden">
+        
+    <header class="bg-secondary text-white hidden md:block">
+      <div class="flex justify-between items-center px-6 py-2 max-w-7xl mx-auto">
+        <div class="flex space-x-6 text-sm">
+          <div class="flex items-center space-x-1">
+            <svg class="w-4 h-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l.06.07 3.39 3.39a8.91 8.91 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"/></svg>
+            <span>+941 125 7890</span>
+          </div>
+          <div class="flex items-center space-x-1">
+            <svg class="w-4 h-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+            <span>info@wastetracker.com</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav-bar" class="nav-bar bg-white border-b border-gray-100 transition-all duration-300">
+      <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+        <a href="homepage.html#home" class="flex items-center gap-2 text-3xl font-extrabold text-secondary">
+          <div class="text-4xl text-primary leading-none">♻️</div>
+          <span class="m-0">
+            <span class="text-primary">S</span>MART <span class="text-primary">W</span>ASTE <span class="text-primary">T</span>RACKER
+          </span>
+        </a>
+        <div class="hidden lg:flex space-x-8 items-center text-lg font-medium text-gray-700">
+          <a href="homepage.html#home" class="hover:text-primary transition duration-200">Home</a>
+          <a href="homepage.html#about" class="hover:text-primary transition duration-200">About</a>
+          <a href="homepage.html#service" class="hover:text-primary transition duration-200">Service</a>
+          <a href="homepage.html#project" class="hover:text-primary transition duration-200">Development</a>
+          <a href="homepage.html#team" class="hover:text-primary transition duration-200">Team</a>
+          <a href="Login.html" class="px-6 py-2 rounded-lg bg-primary text-white hover:bg-opacity-80 transition duration-300 shadow-md">
+            Login
+          </a>
+        </div>
+        <button class="lg:hidden text-2xl text-secondary menu-toggle">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="flex items-start justify-center min-h-full p-4 sm:p-6">
+        <div class="bg-white flex flex-col rounded-2xl shadow-xl max-w-7xl w-full p-6 md:p-8">
+          
+          <div class="w-full">
+            <h3 class="font-bold text-3xl text-primary mt-2">Bin Status Dashboard</h3>
+            <p class="text-sm mt-2 text-gray-500 mb-8">Real-time overview of all smart waste bins and their operational status. Table size adjusts automatically based on the data.</p>
+          </div>
+
+          <div class="search-container mb-10 mx-auto">
+              <div class="input-wrapper">
+                  <div class="effect-layer outer-glow"></div>
+                  <div class="effect-layer dark-layer"></div>
+                  <div class="effect-layer bright-layer"></div>
+                  <div class="effect-layer primary-border"></div>
+
+                  <div class="button-border-effect"></div>
+
+                  <input 
+                      type="text" 
+                      class="search-field" 
+                      placeholder="Search bins..."
+                      aria-label="Search input"
+                      id="search-input"
+                  >
+
+                  <div class="pink-hint"></div>
+                  <div class="gradient-mask"></div>
+
+                  <button class="search-button" aria-label="Search" id="search-button-action">
+                      <svg viewBox="0 0 24 24" fill="none">
+                          <circle class="search-circle" cx="11" cy="11" r="8" stroke="#ffffff" stroke-width="2" fill="none" />
+                          <line class="search-line" x1="16.65" y1="16.65" x2="22" y2="22" stroke="#ffffff" stroke-width="2" />
+                      </svg>
+                  </button>
+              </div>
+          </div>
+          <div class="w-full overflow-x-auto rounded-xl border border-gray-200 shadow-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-primary/90">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Bin ID</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Location</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Category</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Status</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-100" id="bin-status-table-body">
+                </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div> 
+    
+    <footer class="bg-gray-900 pt-16 pb-6">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8 text-gray-400">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-700 pb-10 mb-8">
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Get In Touch</h4>
+            <p class="mb-2 flex items-center">
+              <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.79 6.2a.85.85 0 0 1 1.21 1.22L12 20.32l-8-8.09a.85.85 0 0 1 1.22-1.21L12 17.58l7.21-7.2a.85.85 0 0 1 1.21 1.22zM12 2a4 4 0 0 1 4 4c0 1.26-1.5 3.2-4 6-2.5-2.8-4-4.74-4-6a4 4 0 0 1 4-4z"/></svg>
+              123 York St, Orion City, Colombo 05
+            </p>
+            <p class="mb-2 flex items-center">
+              <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l.06.07 3.39 3.39a8.91 8.91 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"/></svg>
+              +941 125 7890
+            </p>
+            <p class="mb-2 flex items-center">
+              <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+              info@wastetracker.com
+            </p>
+          </div>
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Quick Links</h4>
+            <div class="space-y-2">
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#about">About Us</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#contact">Contact Us</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Our Services</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#team">Meet The Team</a>
+              <a class="block hover:text-primary transition duration-300" href="Login.html">Client Login</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Popular Services</h4>
+            <div class="space-y-2">
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Bin Monitoring</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Route Optimization</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Data Analytics</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Maintenance</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Financial Tracking</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Newsletter</h4>
+            <p>Stay updated with our latest smart waste solutions and industry news.</p>
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between items-center text-sm">
+          <div class="text-center md:text-left mb-4 md:mb-0">
+            &copy; 2025 <a class="text-white hover:text-primary" href="#">Smart Waste Tracker</a>. All Rights Reserved.
+          </div>
+          <div class="flex space-x-3">
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.89l-1.92-1.92A4.89 4.89 0 0 0 17 4.5h-1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a4.89 4.89 0 0 0 3.62-1.47l1.92-1.92a2.38 2.38 0 0 0 0-3.35zM7.5 7h4v10h-4a2.5 2.5 0 0 1 0-5h2.5"/></svg>
+            </a>
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1 1.1 2 2.7 2 4.6 0 7-5.5 12-12 12C5.5 24 0 18.5 0 12c0-2.3.9-4.5 2.5-6.2 1.6-1.7 3.8-2.6 6.2-2.8 1.4.3 2.7 1 3.7 2.1 1.1-.2 2.1-.6 3-1.2-.3 1-.9 1.9-1.6 2.5 1.1-.1 2.1-.4 3-.8-.7 1-1.3 1.8-2.1 2.4z"/></svg>
+            </a>
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // --- START NEON SEARCH BAR ANIMATION LOGIC ---
+    const inputWrapper = document.querySelector('.input-wrapper');
+    const searchField = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button-action');
+    let currentDuration = 4000; 
+    let targetDuration = 4000;
+    let animationFrame = null;
+    let isTyping = false;
+    let isSearching = false;
+
+    function smoothTransition() {
+        const diff = targetDuration - currentDuration;
+        
+        if (inputWrapper) { // Check if the element exists
+          if (Math.abs(diff) > 10) {
+              currentDuration += diff * 0.015;
+
+              inputWrapper.style.setProperty('--spin-duration', `${currentDuration}ms`);
+              
+              animationFrame = requestAnimationFrame(smoothTransition);
+          } else {
+              currentDuration = targetDuration;
+              inputWrapper.style.setProperty('--spin-duration', `${currentDuration}ms`);
+              cancelAnimationFrame(animationFrame);
+              animationFrame = null;
+          }
+        }
+    }
+
+    if (searchField && searchButton) {
+      searchField.addEventListener('input', () => {
+          if (!isTyping && !isSearching) {
+              isTyping = true;
+              targetDuration = 60000; 
+              if (!animationFrame) {
+                  smoothTransition();
+              }
+              filterTable(searchField.value); // Filter the table on input
+          } else {
+              filterTable(searchField.value); // Keep filtering while typing
+          }
+      });
+
+      searchField.addEventListener('focus', () => {
+          if (!isTyping && !searchField.value) {
+              targetDuration = 4000;
+              if (animationFrame) {
+                  cancelAnimationFrame(animationFrame);
+                  animationFrame = null;
+              }
+              currentDuration = 4000;
+              inputWrapper.style.setProperty('--spin-duration', `${currentDuration}ms`);
+          }
+      });
+
+      searchField.addEventListener('blur', () => {
+          if (!isSearching) {
+              isTyping = false;
+              targetDuration = 4000;
+
+              if (animationFrame) {
+                  cancelAnimationFrame(animationFrame);
+                  animationFrame = null;
+              }
+
+              smoothTransition();
+          }
+      });
+
+      searchButton.addEventListener('click', () => {
+          isSearching = true;
+
+          if (animationFrame) {
+              cancelAnimationFrame(animationFrame);
+              animationFrame = null;
+          }
+
+          targetDuration = 2500; 
+          smoothTransition();
+          
+          filterTable(searchField.value); // Execute final filter on button click
+
+          setTimeout(() => {
+              isSearching = false;
+              isTyping = false;
+              targetDuration = 4000;
+              
+              if (animationFrame) {
+                  cancelAnimationFrame(animationFrame);
+                  animationFrame = null;
+              }
+              
+              smoothTransition();
+          }, 1500); // Animation duration before returning to normal speed
+      });
+    }
+    // --- END NEON SEARCH BAR ANIMATION LOGIC ---
+
+
+    // --- Dynamic Table Logic (Modified to include filter) ---
+  document.addEventListener('DOMContentLoaded', function () {
+    const tableBody = document.getElementById('bin-status-table-body');
+    let binData = []; // Will store backend data
+
+    // Function to fetch data from backend API
+    async function loadBins() {
+        try {
+            const response = await fetch(
+              "http://localhost/Smart-Waste-Management-Tracker/Smart-Waste-Management-Tracker/api_backend/get_bins.php"
+            );
+
+            const result = await response.json();
+
+            if (result.success) {
+                binData = result.data;
+                renderTable(binData);
+            } else {
+                alert("Failed to load bins: " + result.message);
+            }
+        } catch (error) {
+            console.error("Error loading bins:", error);
+            alert("Unable to connect to backend");
+        }
+    }
+
+    // Status badge colors
+    function getStatusBadge(status) {
+        if (status.includes("full") || status.includes("Full")) {
+            return "bg-red-100 text-red-800";
+        }
+        if (status.includes("half") || status.includes("Half")) {
+            return "bg-blue-100 text-blue-800";
+        }
+        if (status.includes("empty") || status.includes("Empty")) {
+            return "bg-green-100 text-green-800";
+        }
+        return "bg-gray-100 text-gray-800";
+    }
+
+    // Render table rows
+    function renderTable(data) {
+        tableBody.innerHTML = "";
+
+        data.forEach(bin => {
+            const statusClass = getStatusBadge(bin.Status);
+
+            const row = document.createElement("tr");
+            row.className = "hover:bg-gray-50 transition duration-150";
+
+            row.innerHTML = `
+                <td class="px-6 py-3 text-sm font-medium text-gray-900">${bin.Bin_ID}</td>
+                <td class="px-6 py-3 text-sm text-gray-500">${bin.Location}</td>
+                <td class="px-6 py-3 text-sm text-gray-500">${bin.Category}</td>
+                <td class="px-6 py-3 text-sm">
+                    <span class="px-3 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                        ${bin.Status}
+                    </span>
+                </td>
+                <td class="px-6 py-3 text-sm font-medium">
+                    ${bin.Action}
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+
+        if (data.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="px-6 py-10 text-center text-lg text-gray-500">
+                        No bins found matching the search criteria.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    // Search filter
+    window.filterTable = function (searchTerm) {
+        const lower = searchTerm.toLowerCase().trim();
+
+        const filtered = binData.filter(bin =>
+            Object.values(bin).some(v =>
+                String(v).toLowerCase().includes(lower)
+            )
+        );
+
+        renderTable(filtered);
+    };
+
+    // Load backend data on page start
+    loadBins();
+});
+  </script>
+
+</body>
+</html>

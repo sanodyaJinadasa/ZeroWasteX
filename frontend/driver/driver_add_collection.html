@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Record Collection - Driver</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind Configuration
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    // Tracker primary blue
+                    primary: '#002D74', 
+                    secondary: '#121518',
+                },
+                fontFamily: {
+                    sans: ['Poppins', 'sans-serif'],
+                },
+            }
+        }
+    }
+  </script>
+  <style>
+    /* Google Font Import from header_footer.html */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+    /* Custom Styles from header_footer.html */
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: #666666;
+        background: #ffffff; 
+    }
+
+    /* Sticky Navbar Styles */
+    .nav-bar {
+        position: relative;
+        top: 0;
+        width: 100%;
+        z-index: 50;
+    }
+
+    .nav-sticky {
+        position: fixed;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        animation: slideDown 0.3s ease-in-out;
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-100%); }
+        to { transform: translateY(0); }
+    }
+    
+    /* Main content wrapper to push content below the fixed header */
+    .main-content {
+        /* Adjusted padding to show content below header and above footer */
+        padding-top: 100px; 
+        padding-bottom: 80px; 
+        min-height: 100vh;
+        /* Replaced #f3f4f6 with original body background color (or similar light gray) */
+        background: #f9fafb; 
+        /* Added flex centering to mimic original driver_add_collection.html layout */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 1rem; /* p-4 equivalent */
+        padding-right: 1rem; /* p-4 equivalent */
+    }
+
+    /* Original Custom CSS Grid for the required structure. */
+    .main-layout-grid {
+      display: grid;
+      /* Dimensions to match the previous request */
+      grid-template-columns: 2fr 1fr; 
+      gap: 30px; 
+    }
+
+    .full-width-section {
+      /* Force the bottom section to span both columns */
+      grid-column: 1 / -1; 
+    }
+  </style>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navBar = document.getElementById('nav-bar');
+      const headerHeight = navBar.offsetHeight;
+
+      function handleScroll() {
+        if (window.scrollY > headerHeight) {
+          navBar.classList.add('nav-sticky', 'bg-white', 'w-full');
+        } else {
+          navBar.classList.remove('nav-sticky', 'bg-white', 'w-full');
+        }
+      }
+
+      window.addEventListener('scroll', handleScroll);
+    });
+  </script>
+</head>
+
+<body class="font-sans bg-white">
+  <div class="wrapper relative w-full bg-white shadow-xl overflow-hidden">
+        
+    <header class="bg-secondary text-white hidden md:block">
+      <div class="flex justify-between items-center px-6 py-2 max-w-7xl mx-auto">
+        <div class="flex space-x-6 text-sm">
+          <div class="flex items-center space-x-1">
+            <svg class="w-4 h-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l.06.07 3.39 3.39a8.91 8.91 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"/></svg>
+            <span>+941 125 7890</span>
+          </div>
+          <div class="flex items-center space-x-1">
+            <svg class="w-4 h-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+            <span>info@wastetracker.com</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav-bar" class="nav-bar bg-white border-b border-gray-100 transition-all duration-300">
+      <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+        <a href="homepage.html#home" class="flex items-center gap-2 text-3xl font-extrabold text-secondary">
+          <div class="text-4xl text-primary leading-none">♻️</div>
+          <span class="m-0">
+            <span class="text-primary">S</span>MART <span class="text-primary">W</span>ASTE <span class="text-primary">T</span>RACKER
+          </span>
+        </a>
+        <div class="hidden lg:flex space-x-8 items-center text-lg font-medium text-gray-700">
+          <a href="homepage.html#home" class="hover:text-primary transition duration-200">Home</a>
+          <a href="homepage.html#about" class="hover:text-primary transition duration-200">About</a>
+          <a href="homepage.html#service" class="hover:text-primary transition duration-200">Service</a>
+          <a href="homepage.html#project" class="hover:text-primary transition duration-200">Development</a>
+          <a href="homepage.html#team" class="hover:text-primary transition duration-200">Team</a>
+          <a href="Login.html" class="px-6 py-2 rounded-lg bg-primary text-white hover:bg-opacity-80 transition duration-300 shadow-md">
+            Login
+          </a>
+        </div>
+        <button class="lg:hidden text-2xl text-secondary menu-toggle">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </nav>
+    
+    <div class="main-content">
+      <div class="bg-gray-100 rounded-2xl shadow-lg w-full max-w-3xl p-8 md:p-10">
+    
+        <div class="w-full px-0 md:px-0"> <h3 class="font-bold text-2xl text-[#002D74]">Record waste collection</h3>
+            <p class="text-xs mt-2 text-gray-500">Log today's bin collection activity</p>
+        </div>
+    
+        <div class="main-layout-grid mt-6"> 
+          
+          <div class="mt-8">   
+            <div id="alertBox" class="hidden mb-4 p-4 rounded-xl"></div>
+            
+            <form id="collectionForm" class="space-y-20"> 
+                <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Collection Date</label>
+                <input 
+                  type="date" 
+                  name="date" 
+                  id="date"
+                  required
+                  class="w-full p-3 rounded-xl border border-gray-300 focus:ring-1 focus:ring-[#002D74] transition">
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-4">Collection Time</label>
+                <input 
+                  type="time" 
+                  name="time" 
+                  id="time"
+                  required
+                  class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002D74] transition">
+              </div>
+              
+              <button type="submit" id="submitBtn" class="hidden"></button>
+              <div class="hidden"></div>
+            </form> 
+            
+          </div> 
+          
+          <div class="hidden md:block relative overflow-hidden rounded-2xl"> 
+            <img src="driver_add_collection.jpg" alt="Waste Collection Illustration" class="w-full h-full object-cover">
+          </div>
+          
+          <div class="full-width-section mt-1 p-5 rounded-2xl "> 
+            <h2 class="text-xl font-medium mb-3">Select Bins Collected</h2>
+            
+            <div id="binsContainer" class="overflow-x-auto border rounded-lg">
+              <p class="text-gray-500 text-center p-4">Loading bins...</p> 
+            </div>
+            
+            <div id="selectedSummary" class="hidden mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <h4 class="font-semibold text-blue-800 mb-2">Selected Bins:</h4>
+                <div id="selectedList" class="flex flex-wrap">
+                    </div>
+            </div>
+
+            <button type="submit" form="collectionForm" id="submitBtn" class="mt-6 bg-primary text-white hover:bg-opacity-80 w-full px-6 py-3 rounded-xl transition duration-200 font-semibold">
+              Record Collection
+            </button>
+            
+            <div class="mt-6 text-center">
+              <a href="driver_dashboard.html" class="text-[#002D74] text-sm hover:underline">← Back to Dashboard</a>
+            </div>
+            
+          </div>
+
+        </div> 
+      </div>
+      </div>
+    
+    <footer class="bg-gray-900 pt-16 pb-6">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8 text-gray-400">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-700 pb-10 mb-8">
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Get In Touch</h4>
+            <p class="mb-2 flex items-center">
+              <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.79 6.2a.85.85 0 0 1 1.21 1.22L12 20.32l-8-8.09a.85.85 0 0 1 1.22-1.21L12 17.58l7.21-7.2a.85.85 0 0 1 1.21 1.22zM12 2a4 4 0 0 1 4 4c0 1.26-1.5 3.2-4 6-2.5-2.8-4-4.74-4-6a4 4 0 0 1 4-4z"/></svg>
+              123 York St, Orion City, Colombo 05
+            </p>
+            <p class="mb-2 flex items-center">
+              <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l.06.07 3.39 3.39a8.91 8.91 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"/></svg>
+              +941 125 7890
+            </p>
+            <p class="mb-2 flex items-center">
+              <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+              info@wastetracker.com
+            </p>
+          </div>
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Quick Links</h4>
+            <div class="space-y-2">
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#about">About Us</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#contact">Contact Us</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Our Services</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#team">Meet The Team</a>
+              <a class="block hover:text-primary transition duration-300" href="Login.html">Client Login</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Popular Services</h4>
+            <div class="space-y-2">
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Bin Monitoring</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Route Optimization</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Data Analytics</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Maintenance</a>
+              <a class="block hover:text-primary transition duration-300" href="homepage.html#service">Financial Tracking</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-white text-xl font-bold mb-4">Newsletter</h4>
+            <p>Stay updated with our latest smart waste solutions and industry news.</p>
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between items-center text-sm">
+          <div class="text-center md:text-left mb-4 md:mb-0">
+            &copy; 2025 <a class="text-white hover:text-primary" href="#">Smart Waste Tracker</a>. All Rights Reserved.
+          </div>
+          <div class="flex space-x-3">
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.89l-1.92-1.92A4.89 4.89 0 0 0 17 4.5h-1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a4.89 4.89 0 0 0 3.62-1.47l1.92-1.92a2.38 2.38 0 0 0 0-3.35zM7.5 7h4v10h-4a2.5 2.5 0 0 1 0-5h2.5"/></svg>
+            </a>
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1 1.1 2 2.7 2 4.6 0 7-5.5 12-12 12C5.5 24 0 18.5 0 12c0-2.3.9-4.5 2.5-6.2 1.6-1.7 3.8-2.6 6.2-2.8 1.4.3 2.7 1 3.7 2.1 1.1-.2 2.1-.6 3-1.2-.3 1-.9 1.9-1.6 2.5 1.1-.1 2.1-.4 3-.8-.7 1-1.3 1.8-2.1 2.4z"/></svg>
+            </a>
+            <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+              <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div> 
+  <script>
+    const form = document.getElementById('collectionForm');
+    const alertBox = document.getElementById('alertBox');
+    const submitBtn = document.getElementById('submitBtn'); 
+    const binsContainer = document.getElementById('binsContainer'); 
+    const selectedSummary = document.getElementById('selectedSummary');
+    const selectedList = document.getElementById('selectedList');
+    const dateInput = document.getElementById('date');
+    const timeInput = document.getElementById('time');
+
+    let selectedBins = [];
+
+    // --- Time/Date Setting ---
+    function updateDateTime() {
+      const now = new Date();
+      
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      dateInput.value = `${year}-${month}-${day}`;
+      
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      timeInput.value = `${hours}:${minutes}`;
+    }
+
+    updateDateTime(); 
+    setInterval(updateDateTime, 60000); 
+
+    // Fetch active bins (half-full or full)
+    async function loadBins() {
+  try {
+    const response = await fetch('http://localhost/Smart-Waste-Management-Tracker/Smart-Waste-Management-Tracker/api_backend/get_bins.php');
+    const result = await response.json();
+
+    if (result.success && result.data.length > 0) {
+      // Filter only bins with the specific status
+      const filteredBins = result.data.filter(bin => bin.Action == "No action has been taken yet.");
+
+      if (filteredBins.length > 0) {
+        displayBins(filteredBins);
+      } else {
+        binsContainer.innerHTML = `<p class="col-span-full text-center text-gray-500 py-12">No bins require action right now.</p>`;
+      }
+
+    } else {
+      binsContainer.innerHTML = `<p class="col-span-full text-center text-gray-500 py-12">${result.message || 'No bins found in system'}</p>`;
+    }
+
+  } catch (error) {
+    binsContainer.innerHTML = '<p class="col-span-full text-center text-red-500 py-12">⚠️ Error loading bins from server</p>';
+  }
+}
+
+
+  function displayBins(bins) {
+   // Inject the entire table structure
+   binsContainer.innerHTML = `
+    <table class="w-full table-auto border-collapse text-left">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="p-3 border">Bin ID</th>
+          <th class="p-3 border">Location</th>
+          <th class="p-3 border">Category</th>
+          <th class="p-3 border">Status</th>
+          <th class="p-3 border">Action</th>
+          <th class="p-3 border text-center">Select</th>
+        </tr>
+      </thead>
+      <tbody id="binTableBody"></tbody>
+    </table>
+  `;
+
+   const tableBody = document.getElementById("binTableBody");
+   tableBody.innerHTML = "";
+
+   bins.forEach(bin => {
+    const row = document.createElement("tr");
+    // Ensure 'p-3 border' classes are applied to each <td> for proper formatting
+    row.innerHTML = `
+      <td class="p-3 border">${bin.Bin_ID}</td>
+      <td class="p-3 border">${bin.Location}</td>
+      <td class="p-3 border">${bin.Category}</td>
+      <td class="p-3 border font-semibold">${bin.Status}</td>
+      <td class="p-3 border">${bin.Action}</td>
+      <td class="p-3 border text-center">
+        <input type="checkbox" value="${bin.Bin_ID}" 
+          data-location="${bin.Location}" 
+          data-category="${bin.Category}"
+          class="bin-checkbox w-5 h-5">
+      </td>`;
+    tableBody.appendChild(row);
+   });
+
+  // re-attach checkbox event listeners
+  document.querySelectorAll('.bin-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', updateSelectedBins);
+  });
+}
+
+
+    function updateSelectedBins() {
+      const checkboxes = document.querySelectorAll('.bin-checkbox:checked');
+      selectedBins = Array.from(checkboxes).map(cb => cb.value);
+
+      if (selectedBins.length > 0) {
+        selectedSummary.classList.remove('hidden');
+        selectedList.innerHTML = Array.from(checkboxes).map(cb => 
+          `<span class="inline-block bg-white px-3 py-1 rounded-lg text-sm mr-2 mb-2">
+            📍 ${cb.dataset.location} (${cb.dataset.category})
+          </span>`
+        ).join('');
+      } else {
+        selectedSummary.classList.add('hidden');
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (selectedBins.length === 0) {
+        showAlert('error', 'Please select at least one bin');
+        return;
+      }
+
+      const formData = new FormData(form);
+      formData.append('bin_ids', selectedBins.join(','));
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Recording...';
+
+      try {
+        const response = await fetch('http://localhost/Smart-Waste-Management-Tracker/Smart-Waste-Management-Tracker/api_backend/add_collection.php', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showAlert('success', result.message);
+          
+          // Reload the page to reflect the changes
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500); // Wait 1.5s for the user to see the message
+          
+        } else {
+          showAlert('error', result.message);
+        }
+      } catch (error) {
+        showAlert('error', 'Network error. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Record Collection';
+      }
+    });
+
+    function showAlert(type, message) {
+      alertBox.className = `mb-4 p-4 rounded-xl ${type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`;
+      alertBox.textContent = message;
+      alertBox.classList.remove('hidden');
+      
+      setTimeout(() => {
+        alertBox.classList.add('hidden');
+      }, 5000);
+    }
+
+    // Load bins on page load
+    loadBins();
+  </script>
+
+</body>
+</html>

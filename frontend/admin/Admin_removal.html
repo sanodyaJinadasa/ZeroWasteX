@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Removal Panel</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#002D74',
+            secondary: '#121518',
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #666666;
+      background: #ffffff;
+    }
+
+    /* Sticky Navbar */
+    .nav-bar {
+      position: relative;
+      width: 100%;
+      z-index: 50;
+    }
+
+    .nav-sticky {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      animation: slideDown 0.3s ease-in-out;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+
+    .main-content {
+      padding-top: 100px;
+      padding-bottom: 80px;
+      background: #f9fafb;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(3px);
+      z-index: 100;
+    }
+
+    select {
+      position: relative;
+      z-index: 50 !important;
+    }
+
+    select {
+      position: relative;
+      z-index: 50 !important;
+    }
+  </style>
+</head>
+
+<body class="font-sans bg-white">
+
+  <div class="wrapper w-full bg-white shadow-xl">
+
+    <!-- Top Contact Bar -->
+    <header class="bg-secondary text-white hidden md:block">
+      <div class="flex justify-between items-center px-6 py-2 max-w-7xl mx-auto text-sm">
+        <div class="flex space-x-6">
+          <div class="flex items-center space-x-1">
+            <svg class="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 0111.19 18 19.79 19.79 0 018.12 9.37 2 2 0 014.08 2H7v4L3.89 7.11a2 2 0 00-.25 3.12l3.45 3.45a9 9 0 003.12 1.34 2 2 0 003.01-.25L17 20.11V16.92z"/>
+            </svg>
+            <span>+941 125 7890</span>
+          </div>
+
+          <div class="flex items-center space-x-1">
+            <svg class="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <path d="m2 7 10 7 10-7"/>
+            </svg>
+            <span>info@wastetracker.com</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navbar -->
+    <nav id="nav-bar" class="nav-bar bg-white border-b border-gray-200">
+      <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+
+        <a href="homepage.html#home" class="flex items-center gap-2 text-3xl font-extrabold text-secondary">
+          <span class="text-4xl text-primary">♻️</span>
+          <span><span class="text-primary">S</span>MART <span class="text-primary">W</span>ASTE <span class="text-primary">T</span>RACKER</span>
+        </a>
+
+        <div class="hidden lg:flex space-x-8 items-center text-lg text-gray-700 font-medium">
+          <a href="homepage.html#home" class="hover:text-primary">Home</a>
+          <a href="homepage.html#about" class="hover:text-primary">About</a>
+          <a href="homepage.html#service" class="hover:text-primary">Service</a>
+        <a href="#" class="hover:text-primary">Development</a>
+        <a href="#" class="hover:text-primary">Team</a>
+
+          <a href="Login.html" class="px-6 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-opacity-80">
+            Logout
+          </a>
+        </div>
+
+        <button class="lg:hidden text-2xl text-secondary menu-toggle">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <div class="max-w-7xl w-full mx-auto px-4">
+
+        <div class="text-center mb-10">
+          <h2 class="text-4xl font-extrabold text-secondary">
+            Administrator Removal Panel
+          </h2>
+          <p class="text-lg text-gray-600">Use this panel to permanently remove users, locations, and bins.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+          <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-primary">
+  <h3 class="text-2xl font-bold text-secondary mb-4 flex items-center">
+    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor">
+      <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    Remove User
+  </h3>
+
+  <form id="form-user" class="space-y-4">
+    <form id="form-user" class="space-y-4"> 
+    <div> 
+      <label class="text-sm font-medium">User_ID</label> 
+      <input id="user_ID" required class="mt-1 w-full p-2 border rounded-lg" placeholder="Enter User ID"> 
+    </div>
+
+    <div>
+      <label class="text-sm font-medium">Role</label>
+      <select id="user-role" required class="mt-1 w-full p-2 border rounded-lg">
+        <option value="" selected disabled>Select Role</option>
+      </select>
+    </div>
+
+    <button type="submit" class="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+      REMOVE USER
+    </button>
+  </form>
+</div>
+
+        <!-- REMOVE LOCATION -->
+          <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-primary">
+  <h3 class="text-2xl font-bold text-secondary mb-4 flex items-center">
+    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor">
+      <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2"/>
+      <path d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" stroke-width="2"/>
+    </svg>
+    Remove Location
+  </h3>
+
+  <form id="form-location" class="space-y-4">
+    <div>
+      <label class="text-sm font-medium">Location Name</label>
+      <select id="location-name" required class="w-full p-2 border rounded-lg">
+        <option value="" selected disabled>Select Location</option>
+      </select>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="text-sm font-medium">Latitude</label>
+        <input type="number" step="0.000001" id="location-lat" required class="w-full p-2 border rounded-lg">
+      </div>
+      <div>
+        <label class="text-sm font-medium">Longitude</label>
+        <input type="number" step="0.000001" id="location-lon" required class="w-full p-2 border rounded-lg">
+      </div>
+    </div>
+
+    <button type="submit" class="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+      REMOVE LOCATION
+    </button>
+  </form>
+</div>
+
+
+          <!-- REMOVE BIN -->
+          <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-primary">
+            <h3 class="text-2xl font-bold text-secondary mb-4 flex items-center">
+              <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor">
+                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862A2 2 0 015.867 19.142L5 7M10 11v6m4-6v6M9 7V4h6v3M4 7h16" stroke-width="2"/>
+              </svg>
+              Remove Bin
+            </h3>
+
+            <form id="form-bin" class="space-y-4">
+              <div>
+                <label class="text-sm font-medium">Bin ID</label>
+                <input id="bin-id" required class="w-full p-2 border rounded-lg" placeholder="e.g., B-205">
+              </div>
+
+              <div>
+                <label class="text-sm font-medium">Category</label>
+                <select id="bin-category" required class="w-full p-2 border rounded-lg">
+                  <option value="" selected>Select Category</option>
+                  <option value="organic">Organic</option>
+                  <option value="plastic">Plastic</option>
+                  <option value="paper">Paper</option>
+                  <option value="ewaste">E-waste</option>
+                </select>
+              </div>
+
+              <button type="submit" class="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                REMOVE BIN
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+  <footer class="bg-gray-900 pt-16 pb-6">
+
+    <div class="max-w-7xl mx-auto px-6 text-gray-400">
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-700 pb-10 mb-8">
+
+        <div>
+          <h4 class="text-white text-xl font-bold mb-4">Get In Touch</h4>
+          <p class="mb-2 flex items-center">
+            <svg class="w-4 h-4 text-primary mr-2" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2a4 4 0 0 1 4 4c0 1.3-1.5 3.2-4 6-2.5-2.8-4-4.8-4-6a4 4 0 0 1 4-4z"></path>
+            </svg>
+            123 York St, Colombo 05
+          </p>
+
+          <p class="mb-2 flex items-center">
+            <svg class="w-4 h-4 text-primary mr-2" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 20 20 0 0 1-8.6-3.1A20 20 0 0 1 8 10 2 2 0 0 1 4 8h3v4"></path>
+            </svg>
+            +941 125 7890
+          </p>
+
+          <p class="mb-2 flex items-center">
+            <svg class="w-4 h-4 text-primary mr-2" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="5" width="18" height="14"></rect>
+              <path d="m2 7 10 7 10-7"></path>
+            </svg>
+            info@wastetracker.com
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-white text-xl font-bold mb-4">Quick Links</h4>
+          <a class="block hover:text-primary" href="#">About Us</a>
+          <a class="block hover:text-primary" href="#">Contact Us</a>
+          <a class="block hover:text-primary" href="#">Our Services</a>
+          <a class="block hover:text-primary" href="#">Meet The Team</a>
+          <a class="block hover:text-primary" href="Login.html">Client Login</a>
+        </div>
+
+        <div>
+          <h4 class="text-white text-xl font-bold mb-4">Popular Services</h4>
+          <a class="block hover:text-primary" href="#">Bin Monitoring</a>
+          <a class="block hover:text-primary" href="#">Route Optimization</a>
+          <a class="block hover:text-primary" href="#">Data Analytics</a>
+          <a class="block hover:text-primary" href="#">Maintenance</a>
+        </div>
+
+        <div>
+          <h4 class="text-white text-xl font-bold mb-4">Newsletter</h4>
+          <p>Stay updated with our latest smart waste solutions.</p>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-between items-center text-sm">
+        <div class="text-center md:text-left mb-4 md:mb-0">
+          © 2025 Smart Waste Tracker. All Rights Reserved.
+        </div>
+
+        <div class="flex space-x-3">
+
+          <!-- FACEBOOK -->
+          <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary">
+            <svg class="w-4 h-4" fill="white" viewBox="0 0 24 24">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </div>
+
+          <!-- WHATSAPP -->
+          <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary">
+            <svg class="w-4 h-4" fill="white" viewBox="0 0 24 24">
+              <path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 14 9l3 1-1-3a10 10 0 0 0 1-7 10 10 0 0 0-7-10zm5 13l-2 1c-1 1-3-1-4-2s-3-3-2-4l1-2h1l1 1-1 2 2 2 2-1 1 1v1z"/>
+            </svg>
+          </div>
+
+          <!-- TWITTER -->
+          <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary">
+            <svg class="w-4 h-4" fill="white" viewBox="0 0 24 24">
+              <path d="M22 4s-.7 2.1-2 3.4c1 1.1 2 2.7 2 4.6 0 7-5.5 12-12 12S0 19 0 12c0-2.3.9-4.5 2.5-6.2C4 4 6 3 8.5 2.8c1.4.3 2.7 1 3.7 2.1 1.1-.2 2.1-.6 3-1.2-.3 1-.9 1.9-1.6 2.5 1.1-.1 2.1-.4 3-.8-.7 1-1.3 1.8-2.1 2.4z"/>
+            </svg>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+</div>
+<script>
+const API = "http://localhost/Smart-Waste-Management-Tracker/Smart-Waste-Management-Tracker/api_backend/remove_user_bin.php";
+
+// ---------------- LOAD DROPDOWNS ----------------
+async function loadDropdowns() {
+    loadData("load_roles", "user-role");
+    loadData("load_locations", "location-name");
+    loadData("load_categories", "bin-category");
+}
+
+async function loadData(action, elementId) {
+    const res = await fetch(API + "?action=" + action);
+    const json = await res.json();
+
+    const select = document.getElementById(elementId);
+    select.innerHTML = ""; // clear
+
+    let items = [];
+    if(action === "load_roles") items = json.users || [];
+    if(action === "load_locations") items = json.locations || [];
+    if(action === "load_categories") items = json.categories || [];
+
+    // Add default "Select" option
+    const defaultOpt = document.createElement("option");
+    defaultOpt.value = "";
+    defaultOpt.textContent = "Select " + elementId.replace("-", " ");
+    defaultOpt.selected = true;
+    defaultOpt.disabled = true;
+    select.appendChild(defaultOpt);
+
+    // Add options from backend
+    items.forEach(item => {
+        const opt = document.createElement("option");
+        opt.value = item;
+        opt.textContent = item;
+        select.appendChild(opt);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", loadDropdowns);
+
+// ---------------- REMOVE USER ----------------
+
+    // Handle delete user form
+    document.getElementById("form-user").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        if (!confirm("Are you sure you want to delete this user?")) return;
+
+        const role = document.getElementById("user-role").value;
+        const userID = document.getElementById("user_ID").value.trim();
+
+        if (!role || !userID) {
+            alert("Please provide both role and user ID.");
+            return;
+        }
+
+        if (isNaN(userID)) {
+            alert("User ID must be a number.");
+            return;
+        }
+
+        const form = new FormData();
+        form.append("action", "delete_user");
+        form.append("role", role);
+        form.append("user_ID", parseInt(userID, 10));
+
+        try {
+            const res = await fetch(API, { method: "POST", body: form });
+            const data = await res.json();
+            alert(data.message);
+
+            if (data.success) e.target.reset();
+        } catch (err) {
+            console.error("Error deleting user:", err);
+            alert("An error occurred while deleting the user.");
+        }
+    });
+
+
+
+// ---------------- REMOVE LOCATION ----------------
+document.getElementById("form-location").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (!confirm("Are you sure you want to delete this location?")) return;
+
+    const form = new FormData();
+    form.append("action", "delete_location");
+    form.append("location", document.getElementById("location-name").value);
+
+    const res = await fetch(API, { method: "POST", body: form });
+    const data = await res.json();
+    alert(data.message);
+
+    if (data.success) e.target.reset();
+});
+
+// ---------------- REMOVE BIN ----------------
+document.getElementById("form-bin").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (!confirm("Are you sure you want to delete this bin?")) return;
+
+    const form = new FormData();
+    form.append("action", "delete_bin");
+    form.append("bin_id", document.getElementById("bin-id").value);
+    form.append("category", document.getElementById("bin-category").value);
+
+    const res = await fetch(API, { method: "POST", body: form });
+    const data = await res.json();
+    alert(data.message);
+
+    if (data.success) e.target.reset();
+});
+</script>
+
+</body>
+</html>

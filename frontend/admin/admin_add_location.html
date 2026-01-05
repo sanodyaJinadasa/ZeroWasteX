@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <title>Add New Location - Admin</title>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+  <div class="bg-white flex flex-col md:flex-row rounded-2xl shadow-xl max-w-3xl w-full overflow-hidden">
+
+    <!-- Left Form Section -->
+    <div class="md:w-1/2 w-full px-10 py-10">
+      <h3 class="font-bold text-3xl text-[#002D74] mb-2">Add New Location</h3>
+      <p class="text-sm text-[#002D74] mb-6">Register a new location in the system</p>
+
+      <div id="alertBox" class="hidden mb-4 p-4 rounded-xl w-full"></div>
+
+      <form id="addLocationForm" class="flex flex-col space-y-4">
+
+        <div>
+          <label for="name" class="block text-sm font-medium text-[#002D74] mb-1">Location Name</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Enter location name (e.g., Y-Junction, Pambahinna)"
+            required
+            class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002D74] outline-none"
+          >
+        </div>
+
+        <div>
+          <label for="longitude" class="block text-sm font-medium text-[#002D74] mb-1">Longitude</label>
+          <input
+            type="text"
+            name="longitude"
+            id="longitude"
+            placeholder="Enter longitude"
+            required
+            step="0.00000000000000000001" 
+            class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002D74] outline-none"
+          >
+        </div>
+
+        <div>
+          <label for="latitude" class="block text-sm font-medium text-[#002D74] mb-1">Latitude</label>
+          <input
+            type="text"
+            name="latitude"
+            id="latitude"
+            placeholder="Enter latitude"
+            required
+            step="0.00000000000000000001" 
+            class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002D74] outline-none"
+          >
+        </div>
+
+        <!-- Equal Sized Buttons -->
+        <div class="flex justify-between gap-4 mt-4">
+          <button
+            type="button"
+            onclick="document.getElementById('addLocationForm').reset()"
+            class="w-1/2 bg-gray-200 text-[#002D74] font-semibold rounded-xl py-3 hover:bg-gray-300 duration-200 text-center"
+          >
+            Clear
+          </button>
+
+          <button
+            type="submit"
+            id="submitBtn"
+            class="w-1/2 bg-[#002D74] text-white font-semibold rounded-xl py-3 hover:scale-105 duration-300 text-center"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+
+      <div class="flex gap-2 mt-8 text-sm">
+        <a href="admin_dashboard.html" class="text-[#002D74] font-medium hover:underline">← Back to Dashboard</a>
+      </div>
+    </div>
+
+    <!-- Right Image Section -->
+    <div class="hidden md:block md:w-1/2 p-4 relative">
+      <img class="rounded-2xl w-full h-full object-cover" src="add_bin.jpg" alt="Waste collection truck">
+    </div>
+
+  </div>
+
+<script>
+  const form = document.getElementById('addLocationForm');
+  const alertBox = document.getElementById('alertBox');
+  const submitBtn = document.getElementById('submitBtn');
+  const apiUrl = 'http://localhost/Smart-Waste-Management-Tracker/Smart-Waste-Management-Tracker/api_backend/add_location.php';
+
+  // Function to trim to 20 decimals
+  function trimToTwentyDecimals(value) {
+    if (!value) return value;
+    return parseFloat(value).toFixed(20);
+  }
+  function isValidCoordinate(value) {
+  return !isNaN(value) && value !== "";
+}
+
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Trim longitude and latitude to 20 decimals before sending
+    let longitude = trimToTwentyDecimals(document.getElementById('longitude').value);
+    let latitude = trimToTwentyDecimals(document.getElementById('latitude').value);
+
+    // Update input boxes visually
+    document.getElementById('longitude').value = longitude;
+    document.getElementById('latitude').value = latitude;
+
+    const formData = new FormData();
+    formData.append("name", document.getElementById('name').value);
+    formData.append("longitude", longitude);
+    formData.append("latitude", latitude);
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Adding Location...';
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showAlert('success', result.message);
+        form.reset();
+        setTimeout(() => {
+          window.location.href = 'admin_dashboard.html';
+        }, 2000);
+      } else {
+        showAlert('error', result.message);
+      }
+    } catch (error) {
+      showAlert('error', 'Network error. Please try again.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+    }
+  });
+
+  function showAlert(type, message) {
+    alertBox.className =
+      `mb-4 p-4 rounded-xl ${type === 'success'
+        ? 'bg-green-100 text-green-800'
+        : 'bg-red-100 text-red-800'}`;
+
+    alertBox.textContent = message;
+    alertBox.classList.remove('hidden');
+
+    setTimeout(() => {
+      alertBox.classList.add('hidden');
+    }, 5000);
+  }
+</script>
+
+</body>
+</html>

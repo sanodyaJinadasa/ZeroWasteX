@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Smart Waste Tracker - Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Smart Waste Management System Website" name="description">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind Configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Tracker primary blue
+                        primary: '#002D74', 
+                        secondary: '#121518',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Google Font Import */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+        /* Custom Styles (from style.css) */
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #666666;
+            background: #dddddd;
+        }
+
+        /* Sticky Navbar Styles */
+        .nav-bar {
+            position: relative;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+        }
+
+        .nav-sticky {
+            position: fixed;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.3s ease-in-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        /* Back to Top button hidden by default, shown by JS */
+        .back-to-top {
+            display: none;
+        }
+
+        /* --- CAROUSEL STYLES --- */
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 2s ease-in-out; /* Fade transition over 2 seconds */
+        }
+
+        .slide-active {
+            opacity: 1; /* Show active slide */
+        }
+        /* ------------------------ */
+    </style>
+    
+</head>
+
+<body class="font-sans bg-gray-100">
+    <!-- <div class="wrapper relative w-full max-w-7xl mx-auto bg-white shadow-xl overflow-hidden"> -->
+    <div class="wrapper relative w-full bg-white shadow-xl overflow-hidden">
+        <header class="bg-secondary text-white hidden md:block">
+            <div class="flex justify-between items-center px-6 py-2 max-w-7xl mx-auto">
+                <div class="flex space-x-6 text-sm">
+                    <div class="flex items-center space-x-1">
+                        <svg class="w-4 h-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l.06.07 3.39 3.39a8.91 8.91 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"/></svg>
+                        <span>+941 125 7890</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <svg class="w-4 h-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+                        <span>info@wastetracker.com</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <nav id="nav-bar" class="nav-bar bg-white border-b border-gray-100 transition-all duration-300">
+            <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+                <a href="#home" class="flex items-center gap-2 text-3xl font-extrabold text-secondary">
+                    <div class="text-4xl text-primary leading-none">♻️</div>
+                    <span class="m-0">
+                        <span class="text-primary">S</span>MART <span class="text-primary">W</span>ASTE <span class="text-primary">T</span>RACKER
+                    </span>
+                </a>
+                <div class="hidden lg:flex space-x-8 items-center text-lg font-medium text-gray-700">
+                    <a href="#home" class="hover:text-primary transition duration-200">Home</a>
+                    <a href="#about" class="hover:text-primary transition duration-200">About</a>
+                    <a href="#service" class="hover:text-primary transition duration-200">Service</a>
+                    <a href="#project" class="hover:text-primary transition duration-200">Development</a>
+                    <a href="#team" class="hover:text-primary transition duration-200">Team</a>
+                    <a href="Login.html" class="px-6 py-2 rounded-lg bg-primary text-white hover:bg-opacity-80 transition duration-300 shadow-md">
+                        Login
+                    </a>
+                </div>
+                <button class="lg:hidden text-2xl text-secondary menu-toggle">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+            </div>
+        </nav>
+        
+        <section id="home" class="relative hero-banner flex items-center justify-center text-center pt-24 pb-16 h-[90vh] overflow-hidden">
+            
+            <div id="hero-carousel" class="absolute inset-0 w-full h-full">
+                
+                <div class="carousel-slide slide-active" 
+                     style="background-image: url('a.png');">
+                </div>
+                
+                <div class="carousel-slide" 
+                     style="background-image: url('b.png');">
+                </div>
+                
+                <div class="carousel-slide" 
+                     style="background-image: url('c.png');">
+                </div>
+
+            </div>
+            
+            <div class="absolute inset-0 bg-black bg-opacity-70"></div>
+            <div class="relative z-10 p-6 md:p-12">
+                <h1 class="text-3xl sm:text-5xl lg:text-7xl font-extrabold text-white mb-4">
+                    Smart Solutions for a Cleaner World
+                </h1>
+                <p class="text-lg sm:text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
+                    Innovative waste management solutions for municipalities and enterprises across the globe.
+                </p>
+                <div class="space-x-4">
+                    <a href="#contact" class="scroll-link px-8 py-3 bg-primary text-white font-bold rounded-lg shadow-xl hover:bg-opacity-80 transition duration-300 inline-block">
+                        Contact Us
+                    </a>
+                    <a href="./notifications/Quick_bin_location.html" class="mt-6 inline-block px-8 py-3 bg-primary text-white font-bold rounded-lg shadow-md hover:bg-gray-700 transition duration-300">
+                        Find Bins
+                    </a>
+                </div>
+            </div>
+        </section>
+        <section id="about" class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h5 class="text-primary font-semibold text-xl mb-2">About Us</h5>
+                    <h2 class="text-4xl font-bold text-secondary">5 Years Experience In Waste Management</h2>
+                </div>
+                <div class="flex flex-wrap lg:flex-nowrap gap-10 items-center">
+                    <div class="lg:w-1/2">
+                        <img src="traker.jpg" alt="Team working on site" class="w-full h-auto rounded-xl shadow-2xl object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/121518/002D74?text=SMART+WASTE+MANAGEMENT';" />
+                    </div>
+                    <div class="lg:w-1/2 space-y-6">
+                        <p class="text-lg text-gray-700">
+                            Smart Waste Tracker is a leading waste management solution committed to delivering excellence in every deployment. Since 2020, we have set industry standards for efficiency, sustainability, and data accuracy, ensuring maximum client satisfaction.
+                        </p>
+                        <ul class="space-y-3 text-gray-700">
+                            <li class="flex items-center space-x-2">
+                                <svg class="w-5 h-5 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                <span>Real-time Monitoring & Alerts</span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <svg class="w-5 h-5 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                <span>Dynamic Route Optimization</span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <svg class="w-5 h-5 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                <span>Dedicated Client Support</span>
+                            </li>
+                        </ul>
+                    <a href="login.html" 
+                      class="mt-6 inline-block px-8 py-3 bg-primary text-white font-bold rounded-lg shadow-md hover:bg-gray-700 transition duration-300">
+                      Learn More
+                    </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="bg-secondary py-16 md:py-20">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="p-4 text-white text-center fact-item" data-target="5" data-suffix="" data-label="Years Experience">
+                        <svg class="w-12 h-12 mx-auto text-primary mb-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="2" width="4" height="20" rx="1"/><rect x="2" y="10" width="4" height="12" rx="1"/><rect x="10" y="6" width="4" height="16" rx="1"/></svg>
+                        <div class="text-4xl font-extrabold mb-1 counter-value">0</div>
+                        <p class="text-lg font-medium">Years Experience</p>
+                    </div>
+                    <div class="p-4 text-white text-center fact-item" data-target="150" data-suffix="" data-label="Expert Staff">
+                        <svg class="w-12 h-12 mx-auto text-primary mb-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                        <div class="text-4xl font-extrabold mb-1 counter-value">0</div>
+                        <p class="text-lg font-medium">Expert Staff</p>
+                    </div>
+                    <div class="p-4 text-white text-center fact-item" data-target="50_" data-suffix="" data-label="Total Deployments">
+                        <svg class="w-12 h-12 mx-auto text-primary mb-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18H8.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0-5H12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2"/><path d="M19 13.7V17a2 2 0 0 1-2 2h-1"/><path d="M19 13.7a2 2 0 0 0 2.3-2.3L22 9a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M12 18v2a2 2 0 0 0 2 2 2 2 0 0 0 2-2v-2"/></svg>
+                        <div class="text-4xl font-extrabold mb-1 counter-value">0</div>
+                        <p class="text-lg font-medium">Total Deployments</p>
+                    </div>
+                    <div class="p-4 text-white text-center fact-item" data-target="99" data-suffix="%" data-label="Resource Savings">
+                        <svg class="w-12 h-12 mx-auto text-primary mb-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+                        <div class="text-4xl font-extrabold mb-1 counter-value">0</div>
+                        <p class="text-lg font-medium">Resource Savings</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section id="service" class="py-16 md:py-24 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h5 class="text-primary font-semibold text-xl mb-2">Our Services</h5>
+                    <h2 class="text-4xl font-bold text-secondary">We Provide Smart Waste Management Services</h2>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="group service-card p-8 bg-white rounded-xl shadow-lg border-t-4 border-primary transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 rounded-full mr-4 bg-primary text-white transition-all duration-300 group-hover:bg-secondary group-hover:text-primary">
+                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-secondary">Smart Bin Monitoring</h3>
+                        </div>
+                        <p class="text-gray-600">We monitor fill levels and operational status of smart bins in real-time for optimized collection.</p>
+                        <a href="#" class="mt-4 text-primary hover:text-opacity-80 font-semibold flex items-center space-x-1 transition">
+                            <!-- <span>Read More</span> -->
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </a>
+                    </div>
+                    <div class="group service-card p-8 bg-white rounded-xl shadow-lg border-t-4 border-primary transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 rounded-full mr-4 bg-primary text-white transition-all duration-300 group-hover:bg-secondary group-hover:text-primary">
+                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 14.5 9 8c-.7-.7-.7-1.7 0-2.4l.7-.7c.7-.7 1.7-.7 2.4 0l6.5 6.5c.7.7.7 1.7 0 2.4l-.7.7c-.7.7-1.7.7-2.4 0z"/><path d="M16.1 16.1c.9-.9 2.5-1.3 4.1-.7l.7.7c.3.3.3.8 0 1.1l-1.9 1.9c-.3.3-.8.3-1.1 0l-.7-.7c-.6-1.6-.2-3.2.7-4.1z"/></svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-secondary">Route Optimization</h3>
+                        </div>
+                        <p class="text-gray-600">Dynamically generate the most efficient collection routes to save fuel and time, reducing operational costs.</p>
+                        <a href="#" class="mt-4 text-primary hover:text-opacity-80 font-semibold flex items-center space-x-1 transition">
+                            <!-- <span>Read More</span> -->
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </a>
+                    </div>
+                    <div class="group service-card p-8 bg-white rounded-xl shadow-lg border-t-4 border-primary transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 rounded-full mr-4 bg-primary text-white transition-all duration-300 group-hover:bg-secondary group-hover:text-primary">
+                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-secondary">Maintenance & Support</h3>
+                        </div>
+                        <p class="text-gray-600">Proactive maintenance and 24/7 technical support to ensure your waste infrastructure is always online and efficient.</p>
+                        <a href="#" class="mt-4 text-primary hover:text-opacity-80 font-semibold flex items-center space-x-1 transition">
+                            <!-- <span>Read More</span> -->
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </a>
+                    </div>
+                    <div class="group service-card p-8 bg-white rounded-xl shadow-lg border-t-4 border-primary transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 rounded-full mr-4 bg-primary text-white transition-all duration-300 group-hover:bg-secondary group-hover:text-primary">
+                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-secondary">Financial Tracking</h3>
+                        </div>
+                        <p class="text-gray-600">Track costs, savings, and financial performance metrics associated with waste collection operations.</p>
+                        <a href="#" class="mt-4 text-primary hover:text-opacity-80 font-semibold flex items-center space-x-1 transition">
+                            <!-- <span>Read More</span> -->
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </a>
+                    </div>
+                    <div class="group service-card p-8 bg-white rounded-xl shadow-lg border-t-4 border-primary transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 rounded-full mr-4 bg-primary text-white transition-all duration-300 group-hover:bg-secondary group-hover:text-primary">
+                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-secondary">Security & Compliance</h3>
+                        </div>
+                        <p class="text-gray-600">Ensure regulatory compliance and data security for all environmental reporting and operational data.</p>
+                        <a href="#" class="mt-4 text-primary hover:text-opacity-80 font-semibold flex items-center space-x-1 transition">
+                            <!-- <span>Read More</span> -->
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </a>
+                    </div>
+                    <div class="group service-card p-8 bg-white rounded-xl shadow-lg border-t-4 border-primary transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 rounded-full mr-4 bg-primary text-white transition-all duration-300 group-hover:bg-secondary group-hover:text-primary">
+                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><path d="M17 2v2M7 2v2M6 10h12M12 22V7"/></svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-secondary">Data Analytics & Reporting</h3>
+                        </div>
+                        <p class="text-gray-600">Provide deep insights into waste generation patterns and operational performance to guide strategic decisions.</p>
+                        <a href="#" class="mt-4 text-primary hover:text-opacity-80 font-semibold flex items-center space-x-1 transition">
+                            <!-- <span>Read More</span> -->
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="project" class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h5 class="text-primary font-semibold text-xl mb-2">Developments</h5>
+                    <h2 class="text-4xl font-bold text-secondary">Successful Waste Tracker Deployments</h2>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer">
+                        <img src="bin_sensor.jpg" alt="Residential Tower" class="w-full h-64 object-cover transition duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/600x400/121518/002D74?text=PROJECT+IMAGE';">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-6 transition duration-500 opacity-0 group-hover:opacity-100">
+                            <h3 class="text-white text-2xl font-bold">Smart Bin Monitoring</h3>
+                            
+                        </div>
+                    </div>
+                    <div class="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer">
+                        <img src="route_optimize.jpg" alt="Commercial Hub" class="w-full h-64 object-cover transition duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/600x400/121518/002D74?text=PROJECT+IMAGE';">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-6 transition duration-500 opacity-0 group-hover:opacity-100">
+                            <h3 class="text-white text-2xl font-bold">Route Optimization</h3>
+                            
+                        </div>
+                    </div>
+                    <div class="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer">
+                        <img src="analytics.jpg" alt="Municipal Trucks" class="w-full h-64 object-cover transition duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/600x400/121518/002D74?text=PROJECT+IMAGE';">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-6 transition duration-500 opacity-0 group-hover:opacity-100">
+                            <h3 class="text-white text-2xl font-bold">Comprehencive Analytics</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="team" class="py-16 md:py-24 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h5 class="text-primary font-semibold text-xl mb-2">Our Team</h5>
+                    <h2 class="text-4xl font-bold text-secondary">Meet Our Team Members</h2>
+                </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden text-center hover:shadow-xl transition duration-300">
+                        <img src="sandeepa.png" alt="John Doe" class="w-full h-auto object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eeeeee/000000?text=John+Doe+Profile';" />
+                        <div class="p-6">
+                            <h4 class="text-xl font-bold text-secondary">Mr. Sandeepa Madushan</h4>
+                            <p class="text-primary font-medium">Data Analyst</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden text-center hover:shadow-xl transition duration-300">
+                        <img src="nehasa.jpg" alt="Kate Smith" class="w-full h-auto object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eeeeee/000000?text=Kate+Smith+Profile';" />
+                        <div class="p-6">
+                            <h4 class="text-xl font-bold text-secondary">Miss. Nehansa Wijewardhana</h4>
+                            <p class="text-primary font-medium">Database Administrator</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden text-center hover:shadow-xl transition duration-300">
+                        <img src="chamath.jpg" alt="Mark Johnson" class="w-full h-auto object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eeeeee/000000?text=Mark+Johnson+Profile';" />
+                        <div class="p-6">
+                            <h4 class="text-xl font-bold text-secondary">Mr. Chamath Ashen</h4>
+                            <p class="text-primary font-medium">Developer</p>
+                        </div>
+                    </div>
+            </div>
+        </section>
+        <section id="contact" class="py-16 md:py-24 bg-gray-100">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h5 class="text-primary font-semibold text-xl mb-2">Internal Directory</h5>
+                    <h2 class="text-4xl font-bold text-secondary">Office Contact Persons</h2>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-primary rounded-xl shadow-lg overflow-hidden text-center p-6 space-y-4">
+                        <div class="w-24 h-24 mx-auto bg-gray-700 rounded-full flex items-center justify-center text-4xl text-white">AC</div>
+                        <h4 class="text-xl font-bold text-white">Mr. Asanga Coorey</h4>
+                        <p class="text-white font-medium">CEO</p>
+                        <div class="text-sm space-y-1">
+                            <p class="text-gray-300 flex items-center justify-center gap-1">
+                                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l.06.07 3.39 3.39a8.91 8.91 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"/></svg> Ext: 101
+                            </p>
+                            <p class="text-gray-300 flex items-center justify-center gap-1">
+                                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg> john.doe@tracker.com
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bg-primary rounded-xl shadow-lg overflow-hidden text-center p-6 space-y-4">
+                        <div class="w-24 h-24 mx-auto bg-gray-700 rounded-full flex items-center justify-center text-4xl text-white">VZ</div>
+                        <h4 class="text-xl font-bold text-white">Mr. Vivek Zood</h4>
+                        <p class="text-white font-medium">COO</p>
+                        <div class="text-sm space-y-1">
+                            <p class="text-gray-300 flex items-center justify-center gap-1">
+                                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l.06.07 3.39 3.39a8.91 8.91 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"/></svg> Ext: 102
+                            </p>
+                            <p class="text-gray-300 flex items-center justify-center gap-1">
+                                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg> alice.smith@tracker.com
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bg-primary rounded-xl shadow-lg overflow-hidden text-center p-6 space-y-4">
+                        <div class="w-24 h-24 mx-auto bg-gray-700 rounded-full flex items-center justify-center text-4xl text-white">WL</div>
+                        <h4 class="text-xl font-bold text-white">Mr. Willem Lucus</h4>
+                        <p class="text-white font-medium">Manager</p>
+                        <div class="text-sm space-y-1">
+                            <p class="text-gray-300 flex items-center justify-center gap-1">
+                                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l.06.07 3.39 3.39a8.91 8.91 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"/></svg> Ext: 103
+                            </p>
+                            <p class="text-gray-300 flex items-center justify-center gap-1">
+                                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg> mark.johnson@tracker.com
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer class="bg-gray-900 pt-16 pb-6">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 text-gray-400">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-700 pb-10 mb-8">
+                    <div>
+                        <h4 class="text-white text-xl font-bold mb-4">Get In Touch</h4>
+                        <p class="mb-2 flex items-center">
+                            <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.79 6.2a.85.85 0 0 1 1.21 1.22L12 20.32l-8-8.09a.85.85 0 0 1 1.22-1.21L12 17.58l7.21-7.2a.85.85 0 0 1 1.21 1.22zM12 2a4 4 0 0 1 4 4c0 1.26-1.5 3.2-4 6-2.5-2.8-4-4.74-4-6a4 4 0 0 1 4-4z"/></svg>
+                            123 York St, Orion City, Colombo 05
+                        </p>
+                        <p class="mb-2 flex items-center">
+                            <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l.06.07 3.39 3.39a8.91 8.91 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"/></svg>
+                            +941 125 7890
+                        </p>
+                        <p class="mb-2 flex items-center">
+                            <svg class="w-4 h-4 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+                            info@wastetracker.com
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-white text-xl font-bold mb-4">Quick Links</h4>
+                        <div class="space-y-2">
+                            <a class="block hover:text-primary transition duration-300" >About Us</a>
+                            <a class="block hover:text-primary transition duration-300" >Contact Us</a>
+                            <a class="block hover:text-primary transition duration-300" >Our Services</a>
+                            <a class="block hover:text-primary transition duration-300" >Meet The Team</a>
+                            <a class="block hover:text-primary transition duration-300" >Client Login</a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white text-xl font-bold mb-4">Popular Services</h4>
+                        <div class="space-y-2">
+                            <a class="block hover:text-primary transition duration-300" >Bin Monitoring</a>
+                            <a class="block hover:text-primary transition duration-300" >Route Optimization</a>
+                            <a class="block hover:text-primary transition duration-300" >Data Analytics</a>
+                            <a class="block hover:text-primary transition duration-300" >Maintenance</a>
+                            <a class="block hover:text-primary transition duration-300" >Financial Tracking</a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white text-xl font-bold mb-4">Newsletter</h4>
+                        <p>Stay updated with our latest smart waste solutions and industry news.</p>
+                    <!-- <div class="mt-4 flex">
+                    <a class="px-6 bg-primary py-2 rounded-lg text-white hover:bg-opacity-80 transition duration-300 shadow-md inline-block" href="Register.html">Sign Up</a>
+                    </div> -->
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row justify-between items-center text-sm">
+                    <div class="text-center md:text-left mb-4 md:mb-0">
+                        &copy; 2025 <a class="text-white hover:text-primary" href="#">Smart Waste Tracker</a>. All Rights Reserved.
+                    </div>
+                    <div class="flex space-x-3">
+                        <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+                            <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        </a>
+                        <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+                            <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.89l-1.92-1.92A4.89 4.89 0 0 0 17 4.5h-1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a4.89 4.89 0 0 0 3.62-1.47l1.92-1.92a2.38 2.38 0 0 0 0-3.35zM7.5 7h4v10h-4a2.5 2.5 0 0 1 0-5h2.5"/></svg>
+                        </a>
+                        <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+                            <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1 1.1 2 2.7 2 4.6 0 7-5.5 12-12 12C5.5 24 0 18.5 0 12c0-2.3.9-4.5 2.5-6.2 1.6-1.7 3.8-2.6 6.2-2.8 1.4.3 2.7 1 3.7 2.1 1.1-.2 2.1-.6 3-1.2-.3 1-.9 1.9-1.6 2.5 1.1-.1 2.1-.4 3-.8-.7 1-1.3 1.8-2.1 2.4z"/></svg>
+                        </a>
+                        <a class="w-8 h-8 bg-gray-700 flex items-center justify-center rounded-full hover:bg-primary transition duration-300" href="#">
+                            <svg class="w-4 h-4" fill="white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <a id="back-to-top" href="#home" class="back-to-top fixed bottom-6 right-6 p-4 bg-primary text-white rounded-full shadow-lg transition duration-300 hover:bg-opacity-80">
+            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+        </a>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+    <script>
+        (function ($) {
+            "use strict";
+
+            // --- 1. Navbar Sticky & Scroll Logic ---
+            var nav = $('#nav-bar');
+            var backToTop = $('#back-to-top');
+            var navTop = nav.length > 0 ? nav.offset().top : 0;
+
+            $(window).on('scroll', function () {
+                var scrollTop = $(window).scrollTop();
+                
+                // Sticky Navbar
+                if (nav.length > 0) {
+                    if (scrollTop > navTop + 50) {
+                        nav.addClass('nav-sticky');
+                    } else {
+                        nav.removeClass('nav-sticky');
+                    }
+                }
+
+                // Back to Top Button visibility
+                if (scrollTop > 100) {
+                    backToTop.fadeIn(500);
+                } else {
+                    backToTop.fadeOut(500);
+                }
+            });
+
+            // Smooth scrolling using jQuery easing
+            $('.scroll-link').on('click', function (e) {
+                e.preventDefault();
+                var target = this.hash;
+                var $target = $(target);
+                $('html, body').stop().animate({
+                    'scrollTop': $target.offset().top - 70 
+                }, 1000, 'easeInOutExpo');
+            });
+
+
+            // --- 2. Mobile Menu Toggle (Basic) ---
+            $('.menu-toggle').on('click', function() {
+                // Since this HTML is a template without a full mobile menu structure,
+                // this is a placeholder. In a real application, you would toggle 
+                // a class on a side menu element here.
+                alert("Mobile menu clicked. Implement mobile navigation here.");
+            });
+
+
+            // --- 3. Dynamic Counter Animation (Vanilla JS/Intersection Observer) ---
+            const factItems = document.querySelectorAll('.fact-item');
+            const counterObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const item = entry.target;
+                        const target = parseInt(item.dataset.target);
+                        const suffix = item.dataset.suffix;
+                        const counterValue = item.querySelector('.counter-value');
+                        let start = 0;
+                        const duration = 2000;
+                        const step = target / (duration / 10);
+                        let startTime;
+
+                        function updateCounter(timestamp) {
+                            if (!startTime) startTime = timestamp;
+                            const progress = timestamp - startTime;
+                            const current = Math.min(target, start + step * (progress / 10));
+
+                            counterValue.textContent = Math.floor(current) + suffix;
+
+                            if (current < target) {
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                counterValue.textContent = target + suffix;
+                            }
+                        };
+
+                        requestAnimationFrame(updateCounter);
+                        observer.unobserve(item); // Stop observing once counting starts
+                    }
+                });
+            }, { threshold: 0.5 }); // Trigger when 50% of the element is visible
+
+            factItems.forEach(item => {
+                counterObserver.observe(item);
+            });
+
+
+            // --- 4. Hero Carousel Logic (New Implementation) ---
+            const slides = document.querySelectorAll('.carousel-slide');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                // Hide all slides
+                slides.forEach(slide => {
+                    slide.classList.remove('slide-active');
+                });
+                
+                // Show the current slide
+                slides[index].classList.add('slide-active');
+            }
+
+            function nextSlide() {
+                // Increment index, wrapping back to 0
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            // Start the carousel (changes image every 5 seconds)
+            if (slides.length > 1) {
+                // Initialize the first slide
+                showSlide(currentSlide);
+                setInterval(nextSlide, 5000); 
+            }
+
+
+            // --- 5. Contact Form Submission (Client-Side Simulation) ---
+            // NOTE: This is a client-side only submission and does not send actual email.
+            $("#contactForm").validate({
+                rules: {
+                    name: { required: true, minlength: 2 },
+                    email: { required: true, email: true },
+                    subject: { required: true, minlength: 5 },
+                    message: { required: true, minlength: 10 }
+                },
+                messages: {
+                    name: "Please enter your name",
+                    email: "Please enter a valid email address",
+                    subject: "Please enter a subject",
+                    message: "Please enter your message"
+                },
+                submitHandler: function(form, event) {
+                    event.preventDefault();
+                    var $form = $(form);
+                    var $this = $("#sendMessageButton");
+                    $this.prop("disabled", true);
+
+                    // Client-side simulation of a successful submission
+                    // IMPORTANT: This form is client-side only and does not send emails.
+                    setTimeout(function() {
+                        $('#success').html("<div class='p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50' role='alert'>")
+                                .find(".text-green-800")
+                                .append("<span class='font-medium'>Success!</span> Your message has been sent. We will contact you shortly.")
+                                .append("</div>");
+
+                        $form.trigger("reset");
+                        $this.prop("disabled", false);
+
+                        // Clear success message after 5 seconds
+                        setTimeout(function() {
+                            $('#success').empty();
+                        }, 5000);
+
+                    }, 1000);
+                },
+                errorPlacement: function(error, element) {
+                    // Customize error placement
+                    error.addClass('text-red-500 text-sm mt-1');
+                    element.closest('div').append(error);
+                }
+            });
+
+        })(jQuery);
+    </script>
+</body>
+
+</html>
+

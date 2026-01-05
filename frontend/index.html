@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <title>Smart Waste Management Tracker</title>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Navigation Bar -->
+  <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="text-4xl">♻️</div>
+          <div>
+            <h1 class="font-bold text-2xl text-[#002D74]">Smart Waste Tracker</h1>
+            <p class="text-xs text-gray-600">Efficient Waste Management System</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <a href="login.html" class="bg-[#002D74] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#001a4d] transition">
+            Login
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="pt-32 pb-20 px-4 bg-gradient-to-br from-[#002D74] via-blue-800 to-blue-900 text-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        
+        <!-- Left Content -->
+        <div>
+          <div class="inline-block bg-blue-600 bg-opacity-50 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+            🌍 Sustainable Waste Management Solution
+          </div>
+          <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            Smart Waste Management System
+          </h1>
+          <p class="text-xl text-blue-100 mb-8 leading-relaxed">
+            Streamline waste collection, track disposal patterns, and optimize routes with our comprehensive waste management platform. Built for efficiency and environmental sustainability.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <a href="login.html" class="bg-white text-[#002D74] px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition shadow-lg">
+              Get Started →
+            </a>
+            <a href="#features" class="bg-blue-600 bg-opacity-50 backdrop-blur text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-opacity-70 transition border-2 border-white">
+              Learn More
+            </a>
+          </div>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-6 mt-12">
+            <div>
+              <p class="text-4xl font-bold">100+</p>
+              <p class="text-blue-200 text-sm">Active Bins</p>
+            </div>
+            <div>
+              <p class="text-4xl font-bold">50+</p>
+              <p class="text-blue-200 text-sm">Daily Collections</p>
+            </div>
+            <div>
+              <p class="text-4xl font-bold">95%</p>
+              <p class="text-blue-200 text-sm">Efficiency Rate</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Illustration -->
+        <div class="hidden lg:block">
+          <div class="bg-white bg-opacity-10 backdrop-blur rounded-3xl p-8 shadow-2xl border border-white border-opacity-20">
+            <div class="text-center space-y-6">
+              <div class="text-8xl">🗑️</div>
+              <div class="grid grid-cols-3 gap-4">
+                <div class="bg-green-500 bg-opacity-30 rounded-xl p-4">
+                  <div class="text-3xl mb-2">♻️</div>
+                  <p class="text-xs font-semibold">Recyclable</p>
+                </div>
+                <div class="bg-yellow-500 bg-opacity-30 rounded-xl p-4">
+                  <div class="text-3xl mb-2">🍂</div>
+                  <p class="text-xs font-semibold">Organic</p>
+                </div>
+                <div class="bg-red-500 bg-opacity-30 rounded-xl p-4">
+                  <div class="text-3xl mb-2">⚠️</div>
+                  <p class="text-xs font-semibold">Hazardous</p>
+                </div>
+              </div>
+              <div class="bg-blue-500 bg-opacity-30 rounded-xl p-6">
+                <p class="text-sm font-semibold mb-2">Real-Time Monitoring</p>
+                <div class="flex justify-center gap-2">
+                  <div class="w-16 h-16 bg-green-400 rounded-lg flex items-center justify-center text-2xl">✅</div>
+                  <div class="w-16 h-16 bg-yellow-400 rounded-lg flex items-center justify-center text-2xl">🟡</div>
+                  <div class="w-16 h-16 bg-red-400 rounded-lg flex items-center justify-center text-2xl">🔴</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Powerful Features</h2>
+        <p class="text-xl text-gray-600">Everything you need to manage waste efficiently</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Feature 1 -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition border-2 border-gray-100 hover:border-[#002D74]">
+          <div class="text-5xl mb-4">📍</div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-3">Bin Tracking</h3>
+          <p class="text-gray-600">Real-time monitoring of bin fill levels across all locations. Get instant alerts when bins need collection.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition border-2 border-gray-100 hover:border-[#002D74]">
+          <div class="text-5xl mb-4">🚛</div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-3">Route Optimization</h3>
+          <p class="text-gray-600">Intelligent routing system that calculates the most efficient collection paths for drivers.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition border-2 border-gray-100 hover:border-[#002D74]">
+          <div class="text-5xl mb-4">📊</div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-3">Analytics & Reports</h3>
+          <p class="text-gray-600">Comprehensive reporting on waste collection patterns, trends, and environmental impact.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition border-2 border-gray-100 hover:border-[#002D74]">
+          <div class="text-5xl mb-4">🔔</div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-3">Smart Notifications</h3>
+          <p class="text-gray-600">Automated alerts for full bins, scheduled collections, and system updates.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition border-2 border-gray-100 hover:border-[#002D74]">
+          <div class="text-5xl mb-4">👥</div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-3">Multi-User Access</h3>
+          <p class="text-gray-600">Role-based access for admins, officers, and drivers with customized dashboards.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition border-2 border-gray-100 hover:border-[#002D74]">
+          <div class="text-5xl mb-4">📱</div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-3">Mobile Friendly</h3>
+          <p class="text-gray-600">Fully responsive design works seamlessly on desktop, tablet, and mobile devices.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="py-20 px-4 bg-gray-100">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">How It Works</h2>
+        <p class="text-xl text-gray-600">Simple and efficient waste management in 4 steps</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        
+        <div class="text-center">
+          <div class="bg-[#002D74] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-lg">1</div>
+          <div class="text-5xl mb-4">🗑️</div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Monitor Bins</h3>
+          <p class="text-gray-600">System tracks bin fill levels in real-time across all locations</p>
+        </div>
+
+        <div class="text-center">
+          <div class="bg-[#002D74] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-lg">2</div>
+          <div class="text-5xl mb-4">🔔</div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Get Alerts</h3>
+          <p class="text-gray-600">Receive notifications when bins reach capacity or need attention</p>
+        </div>
+
+        <div class="text-center">
+          <div class="bg-[#002D74] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-lg">3</div>
+          <div class="text-5xl mb-4">🚛</div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Collect Waste</h3>
+          <p class="text-gray-600">Drivers follow optimized routes and log collections</p>
+        </div>
+
+        <div class="text-center">
+          <div class="bg-[#002D74] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-lg">4</div>
+          <div class="text-5xl mb-4">📊</div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Analyze Data</h3>
+          <p class="text-gray-600">View reports and insights to improve efficiency</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- User Roles Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Built for Everyone</h2>
+        <p class="text-xl text-gray-600">Tailored dashboards for different user roles</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Admin -->
+        <div class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl shadow-xl p-8 text-white hover:scale-105 transition">
+          <div class="text-6xl mb-4">👨‍💼</div>
+          <h3 class="text-3xl font-bold mb-4">Admin</h3>
+          <ul class="space-y-3 text-blue-100">
+            <li>✓ Manage all system users</li>
+            <li>✓ Add and configure bins</li>
+            <li>✓ Update bin statuses</li>
+            <li>✓ Access all reports</li>
+            <li>✓ System-wide control</li>
+          </ul>
+        </div>
+
+        <!-- Driver -->
+        <div class="bg-gradient-to-br from-green-500 to-green-700 rounded-2xl shadow-xl p-8 text-white hover:scale-105 transition">
+          <div class="text-6xl mb-4">🚛</div>
+          <h3 class="text-3xl font-bold mb-4">Driver</h3>
+          <ul class="space-y-3 text-green-100">
+            <li>✓ View collection schedule</li>
+            <li>✓ Record waste pickups</li>
+            <li>✓ Log waste amounts</li>
+            <li>✓ Optimized route planning</li>
+            <li>✓ Real-time notifications</li>
+          </ul>
+        </div>
+
+        <!-- Officer -->
+        <div class="bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl shadow-xl p-8 text-white hover:scale-105 transition">
+          <div class="text-6xl mb-4">📋</div>
+          <h3 class="text-3xl font-bold mb-4">Officer</h3>
+          <ul class="space-y-3 text-purple-100">
+            <li>✓ View detailed reports</li>
+            <li>✓ Monitor bin status</li>
+            <li>✓ Analyze trends</li>
+            <li>✓ Generate analytics</li>
+            <li>✓ Track performance</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 px-4 bg-gradient-to-r from-[#002D74] to-blue-900 text-white">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-4xl md:text-5xl font-bold mb-6">Ready to Get Started?</h2>
+      <p class="text-xl text-blue-100 mb-8">Join the future of smart waste management today</p>
+      <a href="login.html" class="inline-block bg-white text-[#002D74] px-10 py-4 rounded-xl font-bold text-xl hover:bg-gray-100 transition shadow-lg">
+        Access System →
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="text-3xl">♻️</div>
+            <h3 class="text-xl font-bold">Smart Waste Tracker</h3>
+          </div>
+          <p class="text-gray-400">Efficient waste management for a sustainable future.</p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-lg mb-4">Quick Links</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#features" class="hover:text-white transition">Features</a></li>
+            <li><a href="login.html" class="hover:text-white transition">Login</a></li>
+            <li><a href="#" class="hover:text-white transition">Documentation</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-lg mb-4">Contact</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li>📧 support@smartwaste.com</li>
+            <li>📱 +1 234 567 8900</li>
+            <li>📍 Negombo, Sri Lanka</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 Smart Waste Management Tracker. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

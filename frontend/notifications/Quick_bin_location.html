@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Bin Locator</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#002D74',
+            secondary: '#121518',
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #666;
+      background: #ffffff;
+    }
+
+    /* Sticky navbar */
+    .nav-bar { position: relative; top: 0; width: 100%; z-index: 50; }
+    .nav-sticky {
+      position: fixed;
+      width: 100%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      animation: slideDown 0.3s ease-in-out;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+
+    .main-content {
+      padding-top: 100px;
+      padding-bottom: 80px;
+      min-height: 100vh;
+      background: #f9fafb;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    /* Bin Colors */
+    .bin-organic { border-left: 5px solid #38a169; background: #f0fdf4; }
+    .bin-plastic { border-left: 5px solid #3b82f6; background: #eff6ff; }
+    .bin-glass { border-left: 5px solid #9333ea; background: #f5f3ff; }
+    .bin-metal { border-left: 5px solid #ef4444; background: #fef2f2; }
+    .bin-polythene { border-left: 5px solid #f6ad55; background: #fffaf0; }
+    .bin-paper { border-left: 5px solid #4a5568; background: #edf2f7; }
+    .bin-ewaste { border-left: 5px solid #805ad5; background: #faf5ff; }
+  </style>
+</head>
+
+<body class="font-sans bg-gray-100">
+
+<div class="wrapper relative w-full bg-white shadow-xl overflow-hidden">
+
+  <!-- Top Contact Bar -->
+  <header class="bg-secondary text-white hidden md:block">
+    <div class="flex justify-between items-center px-6 py-2 max-w-7xl mx-auto">
+      <div class="flex space-x-6 text-sm">
+
+        <div class="flex items-center space-x-1">
+          <svg class="w-4 h-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2H7v4L3.89 7.11a2 2 0 0 0-.25 3.12l3.45 3.45a9 9 0 0 0 3.12 1.34 2 2 0 0 0 3.01-.25L17 20.11V16.92z"></path>
+          </svg>
+          <span>+941 125 7890</span>
+        </div>
+
+        <div class="flex items-center space-x-1">
+          <svg class="w-4 h-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <path d="m2 7 10 7 10-7"></path>
+          </svg>
+          <span>info@wastetracker.com</span>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION -->
+  <nav id="nav-bar" class="nav-bar bg-white border-b border-gray-100 transition-all duration-300">
+    <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+      <a href="#" class="flex items-center gap-2 text-3xl font-extrabold text-secondary">
+        <div class="text-4xl text-primary">♻️</div>
+        <span><span class="text-primary">S</span>MART <span class="text-primary">W</span>ASTE <span class="text-primary">T</span>RACKER</span>
+      </a>
+
+      <div class="hidden lg:flex space-x-8 items-center text-lg font-medium text-gray-700">
+          <a href="homepage.html#home" class="hover:text-primary transition duration-200">Home</a>
+          <a href="homepage.html#about" class="hover:text-primary transition duration-200">About</a>
+          <a href="homepage.html#service" class="hover:text-primary transition duration-200">Service</a>
+          <a href="homepage.html#project" class="hover:text-primary transition duration-200">Development</a>
+          <a href="homepage.html#team" class="hover:text-primary transition duration-200">Team</a>
+        <a href="Login.html"
+           class="px-6 py-2 rounded-lg bg-primary text-white hover:bg-opacity-80 shadow-md">
+          Logout
+        </a>
+      </div>
+
+      <button class="lg:hidden text-2xl text-secondary menu-toggle">
+        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="max-w-7xl w-full mx-auto">
+
+      <div class="text-center mb-10">
+        <h2 class="text-4xl font-extrabold text-secondary mb-2">Find a Recycling Bin Near You</h2>
+        <p class="text-lg text-gray-600">Locate available bins based on the waste category.</p>
+      </div>
+
+      <!-- SELECT CATEGORY -->
+      <div class="bg-gray-50 p-6 rounded-xl shadow-lg mb-8">
+        <label class="block text-lg font-bold text-primary mb-3">
+          Select Waste Category:
+        </label>
+
+        <select id="bin-category" onchange="filterBins()"
+                class="block w-full md:w-1/2 p-3 border border-gray-300 rounded-xl focus:ring-primary">
+          <option value="all">Show All Categories</option>
+          <option value="organic">Organic</option>
+          <option value="plastic">Plastic</option>
+          <option value="polythene">Polythene</option>
+          <option value="paper">Paper</option>
+          <option value="ewaste">E-waste</option>
+          <option value="metal">Metal</option>
+          <option value="glass">Glass</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Map -->
+<div class="lg:col-span-2 bg-gray-50 rounded-xl shadow-lg p-6">
+  <h3 class="text-xl font-bold text-primary mb-4">Location Map</h3>
+  <div class="w-full h-96 border rounded-lg"> 
+    <iframe 
+      src="https://www.google.com/maps/d/embed?mid=1dMwQMcb-JRkZAMImvTWSWDdwX3JnMdk&ehbc=2E312F" 
+      style="width: 100%; height: 100%; border: none;"
+    ></iframe>
+  </div>
+</div>
+
+        <!-- BIN LIST -->
+        <div class="lg:col-span-1 bg-gray-50 rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-bold text-primary mb-4">Available Bins</h3>
+
+          <div id="bin-list" class="space-y-4 h-96 overflow-y-auto pr-2">
+            <p id="no-results" class="text-gray-500 text-center py-10 hidden">
+              No bins found for this category.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 pt-16 pb-6">
+
+    <div class="max-w-7xl mx-auto px-6 text-gray-400">
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-700 pb-10 mb-8">
+
+        <div>
+          <h4 class="text-white text-xl font-bold mb-4">Get In Touch</h4>
+          <p class="mb-2 flex items-center">
+            <svg class="w-4 h-4 text-primary mr-2" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2a4 4 0 0 1 4 4c0 1.3-1.5 3.2-4 6-2.5-2.8-4-4.8-4-6a4 4 0 0 1 4-4z"></path>
+            </svg>
+            123 York St, Colombo 05
+          </p>
+
+          <p class="mb-2 flex items-center">
+            <svg class="w-4 h-4 text-primary mr-2" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 20 20 0 0 1-8.6-3.1A20 20 0 0 1 8 10 2 2 0 0 1 4 8h3v4"></path>
+            </svg>
+            +941 125 7890
+          </p>
+
+          <p class="mb-2 flex items-center">
+            <svg class="w-4 h-4 text-primary mr-2" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="5" width="18" height="14"></rect>
+              <path d="m2 7 10 7 10-7"></path>
+            </svg>
+            info@wastetracker.com
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-white text-xl font-bold mb-4">Quick Links</h4>
+          <a class="block hover:text-primary" href="#">About Us</a>
+          <a class="block hover:text-primary" href="#">Contact Us</a>
+          <a class="block hover:text-primary" href="#">Our Services</a>
+          <a class="block hover:text-primary" href="#">Meet The Team</a>
+          <a class="block hover:text-primary" href="Login.html">Client Login</a>
+        </div>
+
+        <div>
+          <h4 class="text-white text-xl font-bold mb-4">Popular Services</h4>
+          <a class="block hover:text-primary" href="#">Bin Monitoring</a>
+          <a class="block hover:text-primary" href="#">Route Optimization</a>
+          <a class="block hover:text-primary" href="#">Data Analytics</a>
+          <a class="block hover:text-primary" href="#">Maintenance</a>
+        </div>
+
+        <div>
+          <h4 class="text-white text-xl font-bold mb-4">Newsletter</h4>
+          <p>Stay updated with our latest smart waste solutions.</p>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-between items-center text-sm">
+        <div class="text-center md:text-left mb-4 md:mb-0">
+          © 2025 Smart Waste Tracker. All Rights Reserved.
+        </div>
+
+        <div class="flex space-x-3">
+
+          <!-- FACEBOOK -->
+          <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary">
+            <svg class="w-4 h-4" fill="white" viewBox="0 0 24 24">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </div>
+
+          <!-- WHATSAPP -->
+          <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary">
+            <svg class="w-4 h-4" fill="white" viewBox="0 0 24 24">
+              <path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 14 9l3 1-1-3a10 10 0 0 0 1-7 10 10 0 0 0-7-10zm5 13l-2 1c-1 1-3-1-4-2s-3-3-2-4l1-2h1l1 1-1 2 2 2 2-1 1 1v1z"/>
+            </svg>
+          </div>
+
+          <!-- TWITTER -->
+          <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary">
+            <svg class="w-4 h-4" fill="white" viewBox="0 0 24 24">
+              <path d="M22 4s-.7 2.1-2 3.4c1 1.1 2 2.7 2 4.6 0 7-5.5 12-12 12S0 19 0 12c0-2.3.9-4.5 2.5-6.2C4 4 6 3 8.5 2.8c1.4.3 2.7 1 3.7 2.1 1.1-.2 2.1-.6 3-1.2-.3 1-.9 1.9-1.6 2.5 1.1-.1 2.1-.4 3-.8-.7 1-1.3 1.8-2.1 2.4z"/>
+            </svg>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const categorySelect = document.getElementById('bin-category');
+  const binList = document.getElementById('bin-list');
+  const noResults = document.getElementById('no-results');
+
+  function filterBins() {
+    if(!binList || !noResults) return;
+
+    const category = categorySelect.value;
+    binList.innerHTML = '';
+    noResults.classList.add('hidden');
+
+    fetch('http://localhost/Smart-Waste-Management-Tracker/Smart-Waste-Management-Tracker/api_backend/available_bins.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `category=${encodeURIComponent(category)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success && data.data.length > 0) {
+        data.data.forEach(bin => {
+          const div = document.createElement('div');
+          div.className = `p-4 rounded-lg shadow-md ${
+            bin.Variety ? 'bin-' + bin.Variety.toLowerCase() : 'bg-gray-100'
+          }`;
+          div.innerHTML = `<strong>Bin ID:</strong> ${bin.Bin_ID}<br>
+                           <strong>Location:</strong> ${bin.Location}<br>
+                           <strong>Status:</strong> ${bin.Status}`;
+          binList.appendChild(div);
+        });
+      } else {
+        noResults.classList.remove('hidden');
+      }
+    })
+    .catch(err => console.error(err));
+  }
+
+  // Attach change event
+  if(categorySelect) categorySelect.addEventListener('change', filterBins);
+
+  // Optional: initial load
+  // filterBins();
+});
+</script>
+
+</body>
+</html>
+
+
+
+

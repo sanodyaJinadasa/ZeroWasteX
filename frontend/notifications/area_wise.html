@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Area-wise Waste Report</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: { primary: '#002D74', secondary: '#121518' },
+      fontFamily: { sans: ['Poppins', 'sans-serif'] }
+    }
+  }
+}
+</script>
+<style>
+body { font-family: 'Poppins', sans-serif; color: #666666; background: #f3f4f6; }
+#mainChart, #mainChart canvas { width: 100% !important; height: 360px !important; }
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- jsPDF & html2canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body class="p-6">
+
+<!-- Controls -->
+<div class="bg-white rounded-2xl shadow-lg p-6 mb-6 flex flex-wrap gap-4">
+  <div class="flex items-center gap-3">
+    <label class="font-semibold text-gray-700">Period:</label>
+    <select id="periodSelect" class="p-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002D74]">
+      <option value="day">Daily</option>
+      <option value="week">Weekly</option>
+      <option value="month">Monthly</option>
+      <option value="year">Yearly</option>
+    </select>
+  </div>
+  <div id="periodSpecific" class="flex items-center gap-3"></div>
+</div>
+
+<div id="alertBox" class="hidden mb-6 p-4 rounded-xl"></div>
+
+<!-- Report section -->
+<div id="reportContent" class="bg-white rounded-2xl shadow-lg p-8">
+  <div id="chartWrapper" class="space-y-6 lg:flex lg:gap-6 lg:items-start">
+    
+    <!-- Chart -->
+    <div id="chartMain" class="w-full lg:w-2/3 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+      <canvas id="mainChart"></canvas>
+    </div>
+
+    <!-- Table -->
+    <div id="reportTable" class="overflow-x-auto w-full lg:w-1/3 bg-white rounded-xl border border-gray-100 p-4 hidden">
+      <table id="reportTableInner" class="w-full text-left border-collapse border border-gray-200"></table>
+    </div>
+    
+  </div>
+
+  <!-- PDF Button -->
+  <div class="mt-6">
+    <button id="downloadPDFBtn" class="px-6 py-2 rounded-xl bg-primary text-white font-semibold hover:bg-[#001a4d] transition">
+      Download PDF Report
+    </button>
+  </div>
+</div>
+
+<script>
+const apiBase = 'http://localhost/Smart-Waste-Management-Tracker/Smart-Waste-Management-Tracker/api_backend/get_waste_stats_2.php';
+let currentPeriod = "day";
+let mainChart = null;
+let latestData = [];
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("periodSelect").addEventListener("change", () => {
+    currentPeriod = document.getElementById("periodSelect").value;
+    buildPeriodUI();
+  });
+  buildPeriodUI();
+  document.getElementById("downloadPDFBtn").addEventListener("click", downloadPDF);
+});
+
+/* ------------------------------
+   Build UI based on selected period
+------------------------------ */
+function buildPeriodUI() {
+  const container = document.getElementById("periodSpecific");
+  container.innerHTML = `<button id="applyBtn" disabled onclick="fetchReport()" class="px-6 py-2 rounded-xl bg-[#002D74] text-white font-semibold opacity-50">Apply</button>`;
+
+  if(currentPeriod==="day"){
+    const input=document.createElement("input");
+    input.id="datePicker"; input.placeholder="Select date"; input.className="p-2 rounded-xl border border-gray-300";
+    container.prepend(input);
+    flatpickr("#datePicker",{dateFormat:"Y-m-d", onChange:validateApply});
+  }
+  else if(currentPeriod==="week"){
+    container.prepend(buildSelect("yearWeek","Select Year"), buildSelect("monthWeek","Select Month"), buildSelect("weekSelect","Select Week"));
+    loadYears("yearWeek"); loadMonths("monthWeek");
+    document.getElementById("yearWeek").addEventListener("change", loadWeeksForMonth);
+    document.getElementById("monthWeek").addEventListener("change", loadWeeksForMonth);
+    document.getElementById("weekSelect").addEventListener("change", validateApply);
+  }
+  else if(currentPeriod==="month"){
+    container.prepend(buildSelect("yearMonth","Select Year"), buildSelect("monthMonth","Select Month"));
+    loadYears("yearMonth"); loadMonths("monthMonth");
+    document.getElementById("yearMonth").addEventListener("change", validateApply);
+    document.getElementById("monthMonth").addEventListener("change", validateApply);
+  }
+  else if(currentPeriod==="year"){
+    container.prepend(buildSelect("yearOnly","Select Year"));
+    loadYears("yearOnly"); document.getElementById("yearOnly").addEventListener("change", validateApply);
+  }
+}
+
+function buildSelect(id, placeholder){
+  const sel=document.createElement("select"); sel.id=id; sel.className="p-2 rounded-xl border border-gray-300";
+  sel.innerHTML=`<option value="">${placeholder}</option>`; return sel;
+}
+
+function loadYears(elementId){
+  const select=document.getElementById(elementId);
+  const year=new Date().getFullYear();
+  for(let i=0;i<5;i++){ select.innerHTML+=`<option value="${year-i}">${year-i}</option>`; }
+}
+
+function loadMonths(elementId){
+  const select=document.getElementById(elementId);
+  const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  months.forEach((m,i)=>select.innerHTML+=`<option value="${i+1}">${m}</option>`);
+}
+
+function loadWeeksForMonth(){
+  const year=document.getElementById("yearWeek").value;
+  const month=document.getElementById("monthWeek").value;
+  if(!year||!month) return;
+  const weekSelect=document.getElementById("weekSelect"); weekSelect.innerHTML=`<option value="">Select Week</option>`;
+  const weeks=getWeeksInMonth(year,month); weeks.forEach(w=>weekSelect.innerHTML+=`<option value="${w}">Week ${w}</option>`);
+}
+
+function getWeeksInMonth(year,month){
+  const weeks=new Set(); const days=new Date(year,month,0).getDate();
+  for(let d=1;d<=days;d++){ const date=new Date(year,month-1,d); weeks.add(getWeekNumber(date)); }
+  return [...weeks];
+}
+
+function getWeekNumber(d){
+  d=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const yearStart=new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return Math.ceil((((d-yearStart)/86400000)+1)/7);
+}
+
+function validateApply(){
+  let valid=false;
+  if(currentPeriod==="day") valid=document.getElementById("datePicker").value!==""; 
+  else if(currentPeriod==="week") valid=document.getElementById("yearWeek").value && document.getElementById("monthWeek").value && document.getElementById("weekSelect").value;
+  else if(currentPeriod==="month") valid=document.getElementById("yearMonth").value && document.getElementById("monthMonth").value;
+  else if(currentPeriod==="year") valid=document.getElementById("yearOnly").value!=="";
+  const btn=document.getElementById("applyBtn"); btn.disabled=!valid; btn.style.opacity=valid?"1":"0.5";
+}
+
+/* ------------------------------
+   Fetch report
+------------------------------ */
+async function fetchReport(){
+  showLoading();
+  let params=new URLSearchParams();
+  params.append("report","areaWiseWaste");
+  params.append("period",currentPeriod);
+  if(currentPeriod==="day") params.append("date",document.getElementById("datePicker").value);
+  else if(currentPeriod==="week"){ 
+    params.append("year",document.getElementById("yearWeek").value); 
+    params.append("month",document.getElementById("monthWeek").value); 
+    params.append("week",document.getElementById("weekSelect").value);
+  }
+  else if(currentPeriod==="month"){ 
+    params.append("year",document.getElementById("yearMonth").value); 
+    params.append("month",document.getElementById("monthMonth").value);
+  }
+  else if(currentPeriod==="year") params.append("year",document.getElementById("yearOnly").value);
+
+  try {
+    const response = await fetch(apiBase + "?" + params.toString());
+    const result = await response.json();
+    hideLoading();
+    if(result.status){
+      latestData = result.data;
+      buildChart(latestData);
+      buildTable(latestData);
+    } else {
+      latestData = [];
+      buildChart([]);
+      buildTable([]);
+      alert(result.error || "No data available");
+    }
+  } catch(e) {
+    hideLoading();
+    alert("Error fetching report: " + e.message);
+  }
+}
+
+/* ------------------------------
+   Chart
+------------------------------ */
+function buildChart(dataset){
+  const labels=[], values=[], colors=[];
+  const palette=["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
+  dataset.forEach((item,i)=>{ labels.push(item.Area); values.push(parseFloat(item.Total_Amount_KG)); colors.push(palette[i%palette.length]); });
+
+  if(mainChart) mainChart.destroy();
+  const ctx=document.getElementById("mainChart").getContext("2d");
+  mainChart=new Chart(ctx,{
+    type:"bar",
+    data:{labels:labels,datasets:[{label:"Total Waste (KG)",data:values,backgroundColor:colors}]},
+    options:{responsive:true,animation:{duration:800},plugins:{title:{display:true,text:"Area-wise Total Waste"}}}
+  });
+}
+
+/* ------------------------------
+   Build Table with Total
+------------------------------ */
+function buildTable(dataset){
+  const table=document.getElementById("reportTableInner"); table.innerHTML="";
+  if(dataset.length===0){ document.getElementById("reportTable").classList.add("hidden"); return;}
+  document.getElementById("reportTable").classList.remove("hidden");
+
+  let total=0;
+  let html=`<thead class="bg-gray-100"><tr><th class="p-2 border">Area</th><th class="p-2 border">Total Waste (KG)</th></tr></thead><tbody>`;
+  dataset.forEach(item=>{
+    total+=parseFloat(item.Total_Amount_KG);
+    html+=`<tr><td class="p-2 border">${item.Area}</td><td class="p-2 border">${item.Total_Amount_KG}</td></tr>`;
+  });
+  html+=`<tr class="bg-gray-200 font-semibold"><td class="p-2 border">Total</td><td class="p-2 border">${total}</td></tr></tbody>`;
+  table.innerHTML=html;
+}
+
+/* ------------------------------
+   Loading
+------------------------------ */
+function showLoading(){ document.getElementById("mainChart").classList.add("opacity-30"); }
+function hideLoading(){ document.getElementById("mainChart").classList.remove("opacity-30"); }
+
+/* ------------------------------
+   Download PDF
+------------------------------ */
+async function downloadPDF(){
+  if(latestData.length===0){ alert("No data to generate PDF!"); return;}
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p","pt","a4");
+  pdf.setFontSize(18); pdf.text("Area-wise Waste Report",40,40);
+
+  // Period info
+  pdf.setFontSize(12);
+  let periodLabel="";
+  if(currentPeriod==="day") periodLabel="Date: "+document.getElementById("datePicker").value;
+  else if(currentPeriod==="week") periodLabel=`Year: ${document.getElementById("yearWeek").value}, Month: ${document.getElementById("monthWeek").value}, Week: ${document.getElementById("weekSelect").value}`;
+  else if(currentPeriod==="month") periodLabel=`Year: ${document.getElementById("yearMonth").value}, Month: ${document.getElementById("monthMonth").value}`;
+  else if(currentPeriod==="year") periodLabel="Year: "+document.getElementById("yearOnly").value;
+  pdf.text(periodLabel,40,60);
+
+  // Chart
+  const canvas=document.getElementById("mainChart");
+  const chartImg=canvas.toDataURL("image/png");
+  pdf.addImage(chartImg,"PNG",40,80,500,250);
+
+  // Table
+  let startY=340; pdf.text("Area-wise Total Waste",40,startY); startY+=20;
+  const colWidth=[300,150];
+  let total=0;
+  latestData.forEach(row=>{
+    total+=parseFloat(row.Total_Amount_KG);
+    pdf.rect(40,startY-10,colWidth[0],20); pdf.rect(40+colWidth[0],startY-10,colWidth[1],20);
+    pdf.text(String(row.Area),45,startY+5); pdf.text(String(row.Total_Amount_KG),45+colWidth[0],startY+5);
+    startY+=20;
+  });
+  pdf.rect(40,startY-10,colWidth[0],20); pdf.rect(40+colWidth[0],startY-10,colWidth[1],20);
+  pdf.setFont(undefined,'bold'); pdf.text("Total",45,startY+5); pdf.text(String(total),45+colWidth[0],startY+5); pdf.setFont(undefined,'normal');
+
+  pdf.save("Area_Wise_Waste_Report.pdf");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Waste Trends — Dashboard</title>
+
+  <!-- Tailwind CDN for quick styles (you already used it) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: #f3f4f6; color: #333; }
+    .card { background: white; border-radius: 16px; box-shadow: 0 6px 18px rgba(15,23,42,0.06); padding: 20px; }
+    /* Spinner overlay */
+    .spinner-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.7);
+      border-radius: 12px;
+      z-index: 40;
+    }
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 5px solid rgba(0,0,0,0.08);
+      border-top-color: #002D74;
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Chart container animation */
+    .chart-wrap { opacity: 0; transform: translateY(18px); transition: opacity 450ms ease, transform 450ms ease; }
+    .chart-wrap.show { opacity: 1; transform: translateY(0); }
+
+    /* Disabled button visuals */
+    .btn-disabled { opacity: 0.55; cursor: not-allowed; }
+  </style>
+</head>
+<body class="p-6">
+
+  <div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- Header / Action -->
+    <div class="card">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <button id="openTrendBtn" class="px-5 py-2 rounded-xl bg-gray-200 hover:bg-[#002D74] hover:text-white transition">📈 Category Trends</button>
+          <div class="flex items-center gap-3">
+            <label class="font-medium">Top Period</label>
+            <select id="periodSelectTop" class="p-2 rounded-xl border border-gray-300">
+              <option value="day">Daily</option>
+              <option value="week">Weekly</option>
+              <option value="month">Monthly</option>
+              <option value="year">Yearly</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Controls + Chart -->
+    <div class="card relative">
+      <div id="reportControls" class="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <label class="font-medium">Period</label>
+          <select id="periodSelect" class="p-2 rounded-xl border border-gray-300">
+            <option value="day">Daily</option>
+            <option value="week">Weekly</option>
+            <option value="month">Monthly</option>
+            <option value="year">Yearly</option>
+          </select>
+        </div>
+
+        <div id="periodSpecific" class="flex flex-wrap items-center gap-3"></div>
+      </div>
+
+      <div id="alertBox" class="hidden mb-4 p-3 rounded-lg"></div>
+
+      <!-- Chart area -->
+      <div id="reportContent" class="rounded-lg p-4 bg-white relative">
+        <!-- spinner overlay -->
+        <div id="spinnerOverlay" class="spinner-overlay hidden">
+          <div class="spinner"></div>
+        </div>
+
+        <div id="chartContainer" class="chart-wrap">
+          <!-- canvas injected by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full JS -->
+  <script>
+  (function(){
+    // --- Configuration ------------------------------------------------
+    let currentPeriod = 'day';
+    const apiBase = 'http://localhost/Smart-Waste-Management-Tracker/Smart-Waste-Management-Tracker/api_backend/get_waste_stats_4.php';
+    let trendChart = null;
+
+    // DOM shortcuts
+    const periodTop = document.getElementById('periodSelectTop');
+    const periodBottom = document.getElementById('periodSelect');
+    const periodSpecific = document.getElementById('periodSpecific');
+    const reportContent = document.getElementById('reportContent');
+    const chartContainer = document.getElementById('chartContainer');
+    const spinnerOverlay = document.getElementById('spinnerOverlay');
+    const alertBox = document.getElementById('alertBox');
+    const openTrendBtn = document.getElementById('openTrendBtn');
+    const areaInputTop = document.getElementById('areaInputTop');
+
+    // --- Utilities ---------------------------------------------------
+    function showSpinner() { spinnerOverlay.classList.remove('hidden'); }
+    function hideSpinner() { spinnerOverlay.classList.add('hidden'); }
+    function showAlert(msg, type='red') {
+      alertBox.className = `mb-4 p-3 rounded-lg ${ type === 'red' ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700' }`;
+      alertBox.innerText = msg;
+      alertBox.classList.remove('hidden');
+      setTimeout(()=> alertBox.classList.add('hidden'), 6000);
+    }
+
+    function clearChartContainer(){
+      chartContainer.innerHTML = '';
+      if (trendChart) { trendChart.destroy(); trendChart = null; }
+      chartContainer.classList.remove('show');
+    }
+
+    // --- Sync top & bottom period selects --------------------------
+    periodTop.addEventListener('change', e => {
+      currentPeriod = e.target.value;
+      periodBottom.value = currentPeriod;
+      buildPeriodUI();
+    });
+    periodBottom.addEventListener('change', e => {
+      currentPeriod = e.target.value;
+      periodTop.value = currentPeriod;
+      buildPeriodUI();
+    });
+
+    // When clicking the main action button - open daily UI by default + build UI
+    openTrendBtn.addEventListener('click', () => {
+      currentPeriod = 'day';
+      periodTop.value = 'day';
+      periodBottom.value = 'day';
+      buildPeriodUI();
+    });
+
+    // --- Build UI depending on currentPeriod ------------------------
+    function buildPeriodUI(){
+      periodSpecific.innerHTML = '';
+      clearChartContainer();
+      hideSpinner();
+      alertBox.classList.add('hidden');
+
+      let inputsHtml = '';
+
+      switch (currentPeriod) {
+        case 'day':
+          inputsHtml = `<input id="datePicker" class="p-2 rounded-xl border border-gray-300" placeholder="Select date">`;
+          break;
+
+        case 'week':
+          inputsHtml = `
+            <select id="yearSelect" class="p-2 rounded-xl border border-gray-300"></select>
+            <select id="monthSelect" class="p-2 rounded-xl border border-gray-300"></select>
+            <select id="weekSelect" class="p-2 rounded-xl border border-gray-300"></select>
+          `;
+          break;
+
+        case 'month':
+          inputsHtml = `
+            <select id="yearSelect" class="p-2 rounded-xl border border-gray-300"></select>
+            <select id="monthSelect" class="p-2 rounded-xl border border-gray-300"></select>
+          `;
+          break;
+
+        case 'year':
+          inputsHtml = `<select id="yearSelect" class="p-2 rounded-xl border border-gray-300"></select>`;
+          break;
+      }
+
+      // Apply button (initially disabled until valid)
+      periodSpecific.innerHTML = `
+        <div class="flex items-center gap-3 flex-wrap">${inputsHtml}</div>
+        <div class="flex items-center gap-2 ml-2">
+          <button id="applyBtn" class="px-4 py-2 rounded-xl bg-[#002D74] text-white btn-disabled" disabled>Apply</button>
+        </div>
+      `;
+
+      // Initialize specific inputs
+      if (currentPeriod === 'day') {
+        flatpickr("#datePicker", {
+          dateFormat: "Y-m-d",
+          defaultDate: new Date(), // auto select today
+          onChange: validatePeriodInputs
+        });
+      }
+
+      if (['week','month','year'].includes(currentPeriod)) {
+        if (document.getElementById('yearSelect')) populateYear('yearSelect', 8);
+        if (document.getElementById('monthSelect')) populateMonth('monthSelect');
+
+        // Auto-select current values
+        const now = new Date();
+        const curYear = now.getFullYear();
+        const curMonth = now.getMonth() + 1;
+
+        const yearSel = document.getElementById('yearSelect');
+        if (yearSel) yearSel.value = String(curYear);
+
+        const monthSel = document.getElementById('monthSelect');
+        if (monthSel) monthSel.value = String(curMonth);
+
+        // If weekly: populate weeks based on selected year+month
+        if (currentPeriod === 'week') {
+          populateWeeks('weekSelect');
+          // auto-select current week if it belongs to this month
+          const wkSel = document.getElementById('weekSelect');
+          const curWeek = getWeekNumber(new Date());
+          // if dropdown has curWeek, set it
+          if (Array.from(wkSel.options).some(o => Number(o.value) === curWeek)) {
+            wkSel.value = String(curWeek);
+          } else {
+            wkSel.selectedIndex = 0;
+          }
+
+          // update weeks when year/month changes
+          yearSel.addEventListener('change', () => {
+            populateWeeks('weekSelect');
+            validatePeriodInputs();
+          });
+          monthSel.addEventListener('change', () => {
+            populateWeeks('weekSelect');
+            validatePeriodInputs();
+          });
+
+          document.getElementById('weekSelect').addEventListener('change', validatePeriodInputs);
+        }
+
+        // listen to year/month changes for validation
+        if (yearSel) yearSel.addEventListener('change', validatePeriodInputs);
+        if (monthSel) monthSel.addEventListener('change', validatePeriodInputs);
+      }
+
+      // Apply button wiring & validation
+      const applyBtn = document.getElementById('applyBtn');
+      applyBtn.addEventListener('click', () => {
+        // trigger load with period and area (if provided)
+        loadReport('categoryTrend', currentPeriod);
+      });
+
+      // validate initially to enable/disable apply
+      setTimeout(validatePeriodInputs, 40);
+    }
+
+    // --- Populate helpers ------------------------------------------
+    function populateYear(id, count = 6) {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      sel.innerHTML = '';
+      const now = new Date().getFullYear();
+      for (let i = 0; i < count; i++){
+        const y = now - i;
+        sel.innerHTML += `<option value="${y}">${y}</option>`;
+      }
+    }
+
+    function populateMonth(id) {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      sel.innerHTML = '';
+      const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      months.forEach((m, i) => sel.innerHTML += `<option value="${i+1}">${m}</option>`);
+    }
+
+    // Populate weeks relevant to given year+month
+    function populateWeeks(id) {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      sel.innerHTML = '';
+
+      const yearSel = document.getElementById('yearSelect');
+      const monthSel = document.getElementById('monthSelect');
+      if (!yearSel || !monthSel) return;
+
+      const year = Number(yearSel.value);
+      const month = Number(monthSel.value);
+
+      // compute first and last day of the month
+      const firstDay = new Date(year, month - 1, 1);
+      const lastDay = new Date(year, month, 0);
+
+      // gather unique week numbers for all days in the month
+      const weeks = new Set();
+      for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate() + 1)) {
+        weeks.add(getWeekNumber(new Date(d)));
+      }
+
+      const weeksArray = Array.from(weeks).sort((a,b)=>a-b);
+
+      // special handling: if month is January and the first day gave a large week number (prev year),
+      // keep week 1 if the last day has week 1 (rare), otherwise map properly.
+      weeksArray.forEach(w => {
+        sel.innerHTML += `<option value="${w}">Week ${w}</option>`;
+      });
+
+      // If nothing added (edge-case), fallback to 1..5
+      if (weeksArray.length === 0) {
+        for (let i = 1; i <= 5; i++) sel.innerHTML += `<option value="${i}">Week ${i}</option>`;
+      }
+    }
+
+    // week number (ISO-like but simplified for our UI)
+    function getWeekNumber(dInput) {
+      const d = new Date(Date.UTC(dInput.getFullYear(), dInput.getMonth(), dInput.getDate()));
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      const dayDiff = Math.floor((d - yearStart) / 86400000);
+      return Math.ceil((dayDiff + yearStart.getUTCDay() + 1) / 7);
+    }
+
+function buildPeriodParams(){
+  const params = [];
+
+  // --- day ---
+  if (currentPeriod === 'day') {
+    const dateEl = document.getElementById('datePicker');
+    if (!dateEl || !dateEl.value) return '';
+    params.push(`date=${encodeURIComponent(dateEl.value)}`);
+  }
+
+  // --- week ---
+  if (currentPeriod === 'week') {
+    const y = document.getElementById('yearSelect')?.value;
+    const m = document.getElementById('monthSelect')?.value;
+    const w = document.getElementById('weekSelect')?.value;
+    if (!y || !m || !w) return '';
+    params.push(`year=${y}`, `month=${m}`, `week=${w}`);
+  }
+
+  // --- month ---
+  if (currentPeriod === 'month') {
+    const y = document.getElementById('yearSelect')?.value;
+    const m = document.getElementById('monthSelect')?.value;
+    if (!y || !m) return '';
+    params.push(`year=${y}`, `month=${m}`);
+  }
+
+  // --- year ---
+  if (currentPeriod === 'year') {
+    const y = document.getElementById('yearSelect')?.value;
+    if (!y) return '';
+    params.push(`year=${y}`);
+  }
+
+  return params.join('&');
+}
+
+
+    // Enable Apply only when required inputs are filled
+    function validatePeriodInputs(){
+      const applyBtn = document.getElementById('applyBtn');
+      if (!applyBtn) return;
+
+      let valid = true;
+      if (currentPeriod === 'day') {
+        const dateEl = document.getElementById('datePicker');
+        valid = dateEl && dateEl.value;
+      }
+      if (currentPeriod === 'week') {
+        valid = Boolean(document.getElementById('yearSelect')?.value && document.getElementById('monthSelect')?.value && document.getElementById('weekSelect')?.value);
+      }
+      if (currentPeriod === 'month') {
+        valid = Boolean(document.getElementById('yearSelect')?.value && document.getElementById('monthSelect')?.value);
+      }
+      if (currentPeriod === 'year') {
+        valid = Boolean(document.getElementById('yearSelect')?.value);
+      }
+
+      if (valid) {
+        applyBtn.disabled = false;
+        applyBtn.classList.remove('btn-disabled');
+      } else {
+        applyBtn.disabled = true;
+        applyBtn.classList.add('btn-disabled');
+      }
+    }
+
+    // --- Fetch + draw chart ---------------------------------------
+    async function loadReport(type='categoryTrend', period=currentPeriod) {
+      const params = buildPeriodParams();
+      if (!params) { showAlert('Please complete the period selection before applying.', 'red'); return; }
+
+      const url = `${apiBase}?type=${type}&period=${period}&${params}`;
+
+      clearChartContainer();
+      showSpinner();
+
+      try {
+        const res = await fetch(url);
+        const json = await res.json();
+        hideSpinner();
+
+        if (!json.success) {
+          showAlert(json.message || 'API returned an error', 'red');
+          return;
+        }
+
+        drawTrendChart(json.data, period);
+      } catch (err) {
+        hideSpinner();
+        showAlert('Network error or API unreachable: ' + err.message, 'red');
+      }
+    }
+
+    // Create labels per period (last X units)
+    function generatePeriodLabels(period) {
+      const labels = [];
+      const today = new Date();
+
+      if (period === 'day') {
+        for (let i = 59; i >= 0; i--) {
+          const d = new Date(today);
+          d.setDate(today.getDate() - i);
+          labels.push(d.toISOString().split('T')[0]);
+        }
+      } else if (period === 'week') {
+        for (let i = 11; i >= 0; i--) {
+          const d = new Date(today);
+          d.setDate(today.getDate() - (i * 7));
+          labels.push(`${d.getFullYear()}-W${getWeekNumber(d)}`);
+        }
+      } else if (period === 'month') {
+        for (let i = 11; i >= 0; i--) {
+          const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+          labels.push(d.toISOString().slice(0,7));
+        }
+      } else { // year
+        for (let i = 4; i >= 0; i--) labels.push(String(today.getFullYear() - i));
+      }
+      return labels;
+    }
+
+    // Draw multi-line chart; data from API expected as [{Period, Category_Name, Total_KG}, ...]
+    function drawTrendChart(apiData, period) {
+      const labels = generatePeriodLabels(period);
+
+      // Build map { category: { periodLabel: value } }
+      const categoryMap = {};
+      apiData.forEach(r => {
+        const cat = r.Category_Name || 'Unknown';
+        const per = String(r.Period);
+        const val = Number(r.Total_KG) || 0;
+        if (!categoryMap[cat]) categoryMap[cat] = {};
+        categoryMap[cat][per] = val;
+      });
+
+      const datasets = [];
+      const palette = generatePalette(Object.keys(categoryMap).length);
+
+      let idx = 0;
+      for (const cat in categoryMap) {
+        const dataPoints = labels.map(l => categoryMap[cat][l] || 0);
+        datasets.push({
+          label: cat,
+          data: dataPoints,
+          borderColor: palette[idx],
+          backgroundColor: palette[idx],
+          tension: 0.26,
+          fill: false,
+          borderWidth: 2,
+          pointRadius: 2
+        });
+        idx++;
+      }
+
+      // If there were no categories, add a placeholder dataset so Chart.js doesn't crash
+      if (datasets.length === 0) {
+        datasets.push({
+          label: 'No data',
+          data: labels.map(()=>0),
+          borderColor: '#ccc',
+          borderWidth: 1,
+          pointRadius: 0
+        });
+      }
+
+      // create canvas
+      chartContainer.innerHTML = '<canvas id="trendCanvas"></canvas>';
+      const ctx = document.getElementById('trendCanvas').getContext('2d');
+
+      // Chart title based on period
+      const titleText =
+        period === 'day' ? 'Daily Waste Trend (Last 60 Days)' :
+        period === 'week' ? 'Weekly Waste Trend (Last 12 Weeks)' :
+        period === 'month' ? 'Monthly Waste Trend (Last 12 Months)' :
+        'Yearly Waste Trend (Last 5 Years)';
+
+      // Create chart
+      trendChart = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          animation: { duration: 700, easing: 'easeOutQuart' },
+          plugins: {
+            title: { display: true, text: titleText, font: { size: 18 } },
+            legend: { display: true, position: 'top' },
+            tooltip: { mode: 'index', intersect: false }
+          },
+          interaction: { mode: 'index', intersect: false },
+          scales: {
+            x: { title: { display: true, text: 'Time Period' } },
+            y: { beginAtZero: true, title: { display: true, text: 'Total Waste (KG)' } }
+          }
+        }
+      });
+
+      // Show animated container
+      setTimeout(()=> chartContainer.classList.add('show'), 50);
+    }
+
+    // generate a nice palette of HSL strings
+    function generatePalette(n) {
+      const arr = [];
+      for (let i = 0; i < n; i++) {
+        const h = Math.round((360 / Math.max(1, n)) * i);
+        arr.push(`hsl(${h}, 75%, 45%)`);
+      }
+      return arr;
+    }
+
+    // --- Initialization: build UI and auto-select current values ---
+    // Ensure the period selects reflect the initial currentPeriod
+    periodTop.value = currentPeriod;
+    periodBottom.value = currentPeriod;
+    buildPeriodUI();
+
+    // Also validate apply button when area input changes
+    areaInputTop.addEventListener('input', validatePeriodInputs);
+
+    // Auto-run a default report if you want (comment out if you don't want auto fetch)
+    // loadReport('categoryTrend', currentPeriod);
+
+  })();
+  </script>
+
+</body>
+</html>
